@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">DriveSmart</string>
+    <string name="sign_in">Loghează-te</string>
+    <string name="username">Nume utilizator</string>
+    <string name="enter_your_username">Introdu numele de utilizator</string>
+    <string name="password">Parola</string>
+    <string name="enter_your_password">Introdu parola</string>
+    <string name="remember_me">Tine-mă minte</string>
+    <string name="login">Autentificare</string>
+    <string name="forgot_password">Ai uitat parola?</string>
+    <string name="sign_up">Inregistrează-te</string>
+</resources>

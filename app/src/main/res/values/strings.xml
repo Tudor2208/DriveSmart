@@ -1,3 +1,12 @@
 <resources>
-    <string name="app_name">DriveSmart</string>
+    <string name="app_name" translatable="false">DriveSmart</string>
+    <string name="sign_in">Sign in</string>
+    <string name="username">Username</string>
+    <string name="enter_your_username">Enter your username</string>
+    <string name="password">Password</string>
+    <string name="enter_your_password">Enter your password</string>
+    <string name="remember_me">Remember me</string>
+    <string name="login">Login</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="sign_up">Sign up</string>
 </resources>
