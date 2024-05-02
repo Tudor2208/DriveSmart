@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), ForgotPasswordActivity.class);
+                Intent i = new Intent(getApplicationContext(), MenuActivity.class);
                 startActivity(i);
             }
         });

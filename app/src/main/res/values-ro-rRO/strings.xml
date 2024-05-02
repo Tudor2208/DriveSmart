@@ -16,4 +16,8 @@
     <string name="enter_password_again">Introdu parola din nou</string>
     <string name="forgot_password_text">Furnizează adresa de email a contului pentru care vrei să resetezi parola</string>
     <string name="reset_password">Resetează parola</string>
+    <string name="hello">Salut</string>
+    <string name="start_driving">Condu acum</string>
+    <string name="my_journeys">Călătoriile mele</string>
+    <string name="settings">Setări</string>
 </resources>

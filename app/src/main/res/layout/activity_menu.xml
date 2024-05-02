@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_color"
+    tools:context=".MenuActivity">
+
+    <ImageView
+        android:id="@+id/imageView8"
+        android:layout_width="236dp"
+        android:layout_height="283dp"
+        android:scaleX="1.1"
+        android:translationX="10dp"
+        android:translationY="-5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/imageView9"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/vector_asset_3" />
+
+    <ImageView
+        android:id="@+id/imageView9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/vector_asset_4" />
+
+    <TextView
+        android:id="@+id/hello_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="128dp"
+        android:fontFamily="@font/dm_sans"
+        android:text="@string/hello"
+        android:textColor="#FFFFFF"
+        android:textSize="34sp"
+        app:layout_constraintEnd_toStartOf="@+id/imageView8"
+        app:layout_constraintHorizontal_bias="0.61"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/username_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="84dp"
+        android:layout_marginTop="12dp"
+        android:fontFamily="@font/dm_sans"
+        android:text="Tudor"
+        android:textColor="#FFFFFF"
+        android:textSize="34sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/hello_text_view" />
+
+    <Button
+        android:id="@+id/start_driving_button"
+        android:layout_width="270dp"
+        android:layout_height="47dp"
+        android:layout_marginTop="116dp"
+        android:backgroundTint="@color/btn_color"
+        android:fontFamily="@font/dm_sans"
+        android:text="@string/start_driving"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/username_text_view" />
+
+    <Button
+        android:id="@+id/my_journeys_button"
+        android:layout_width="270dp"
+        android:layout_height="47dp"
+        android:layout_marginTop="44dp"
+        android:backgroundTint="@color/btn_color"
+        android:fontFamily="@font/dm_sans"
+        android:text="@string/my_journeys"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/start_driving_button" />
+
+    <Button
+        android:id="@+id/settings_button"
+        android:layout_width="270dp"
+        android:layout_height="47dp"
+        android:layout_marginTop="48dp"
+        android:backgroundTint="@color/btn_color"
+        android:fontFamily="@font/dm_sans"
+        android:text="@string/settings"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/my_journeys_button" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
