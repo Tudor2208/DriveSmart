@@ -13,4 +13,6 @@
     <string name="enter_your_email">Enter your email address</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="enter_password_again">Enter your password again</string>
+    <string name="forgot_password_text">Provide your account’s email\n for which you want to reset password</string>
+    <string name="reset_password">Reset password</string>
 </resources>
