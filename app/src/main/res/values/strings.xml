@@ -9,4 +9,8 @@
     <string name="login">Login</string>
     <string name="forgot_password">Forgot password?</string>
     <string name="sign_up">Sign up</string>
+    <string name="email">Email</string>
+    <string name="enter_your_email">Enter your email address</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="enter_password_again">Enter your password again</string>
 </resources>

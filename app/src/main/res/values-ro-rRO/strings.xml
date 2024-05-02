@@ -6,8 +6,12 @@
     <string name="enter_your_username">Introdu numele de utilizator</string>
     <string name="password">Parola</string>
     <string name="enter_your_password">Introdu parola</string>
-    <string name="remember_me">Tine-mă minte</string>
+    <string name="remember_me">Ține-mă minte</string>
     <string name="login">Autentificare</string>
     <string name="forgot_password">Ai uitat parola?</string>
-    <string name="sign_up">Inregistrează-te</string>
+    <string name="sign_up">Înregistrează-te</string>
+    <string name="email">Email</string>
+    <string name="enter_your_email">Introdu adresa de email</string>
+    <string name="confirm_password">Confirmă parola</string>
+    <string name="enter_password_again">Introdu parola din nou</string>
 </resources>
