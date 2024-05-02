@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "735873597286",
+    "project_id": "drivesmart-42119",
+    "storage_bucket": "drivesmart-42119.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:735873597286:android:f88df43ff7dea54ffad2a7",
+        "android_client_info": {
+          "package_name": "com.tudor.drivesmart"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDs8f_BKA5AHOVvWPpvAEmLPZUCyb3DpUI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
