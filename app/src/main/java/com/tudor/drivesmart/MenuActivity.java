@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -29,6 +30,7 @@ public class MenuActivity extends AppCompatActivity {
     ImageButton logoutButton;
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
+    Button startDrivingButton;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -72,6 +74,9 @@ public class MenuActivity extends AppCompatActivity {
         logoutButton.setOnClickListener(view -> {
             showDialogMessage();
         });
+
+        startDrivingButton = findViewById(R.id.start_driving_button);
+        startDrivingButton.setOnClickListener(view -> startActivity(new Intent(getApplicationContext(), DrivingActivity.class)));
     }
 
     private void showDialogMessage() {
