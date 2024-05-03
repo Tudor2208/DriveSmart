@@ -20,4 +20,17 @@
     <string name="start_driving">Condu acum</string>
     <string name="my_journeys">Călătoriile mele</string>
     <string name="settings">Setări</string>
+    <string name="enter_email_password">Te rog să introduci un email și o parolă</string>
+    <string name="invalid_credentials">Credențiale invalide</string>
+    <string name="passwords_dont_match">Parolele nu se potrivesc</string>
+    <string name="fill_in">Te rog să completezi toate câmpurile</string>
+    <string name="registration_not_successful">Înregistrarea ta a eșuat</string>
+    <string name="password_length">Parola ar trebui să aibă cel puțin 8 caractere</string>
+    <string name="yes">Da</string>
+    <string name="no">Nu</string>
+    <string name="dialog_logout">Ești sigur că vrei să te deconectezi?</string>
+    <string name="empty_email">Te rog să completezi adresa de email</string>
+    <string name="check_email">Te rog să verifici email-ul</string>
+    <string name="problem">A fost o problema</string>
+    <string name="logout">Deconectare</string>
 </resources>

@@ -1,11 +1,16 @@
 package com.tudor.drivesmart;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -21,6 +26,9 @@ public class MenuActivity extends AppCompatActivity {
     TextView helloTextView, usernameTextView;
     FirebaseAuth auth;
     DatabaseReference reference;
+    ImageButton logoutButton;
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -30,6 +38,9 @@ public class MenuActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
         reference = FirebaseDatabase.getInstance().getReference();
+
+        sharedPreferences = getSharedPreferences("saveData", Context.MODE_PRIVATE);
+        editor = sharedPreferences.edit();
 
         helloTextView = findViewById(R.id.hello_text_view);
         helloTextView.setText(helloTextView.getText() + ",");
@@ -56,5 +67,27 @@ public class MenuActivity extends AppCompatActivity {
                 }
             });
         }
+
+        logoutButton = findViewById(R.id.logout_button);
+        logoutButton.setOnClickListener(view -> {
+            showDialogMessage();
+        });
+    }
+
+    private void showDialogMessage() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+        alertDialog.setTitle(R.string.logout)
+                .setMessage(R.string.dialog_logout)
+                .setNegativeButton(R.string.no, (dialogInterface, i) -> dialogInterface.cancel())
+                .setPositiveButton(R.string.yes, (dialogInterface, i) -> {
+                    auth.signOut();
+                    editor.remove("email_key");
+                    editor.remove("password_key");
+                    editor.remove("checkbox_key");
+                    editor.apply();
+                    startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                    finish();
+                }).show();
+        alertDialog.create();
     }
 }

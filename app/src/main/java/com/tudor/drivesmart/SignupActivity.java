@@ -43,13 +43,17 @@ public class SignupActivity extends AppCompatActivity {
             String password2 = confirmPasswordEditText.getText().toString();
 
             if (!email.isEmpty() && !username.isEmpty() && !password.isEmpty() && ! password2.isEmpty()) {
-                if (password.equals(password2)) {
-                    signup(username, email, password);
+                if (password.length() < 8) {
+                    Toast.makeText(getApplicationContext(), R.string.password_length, Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(getApplicationContext(), "Passwords don't match", Toast.LENGTH_SHORT).show();
+                    if (password.equals(password2)) {
+                        signup(username, email, password);
+                    } else {
+                        Toast.makeText(getApplicationContext(), R.string.passwords_dont_match, Toast.LENGTH_SHORT).show();
+                    }
                 }
             } else {
-                Toast.makeText(getApplicationContext(), "Please fill in all the fields", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.fill_in, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -62,7 +66,7 @@ public class SignupActivity extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                 finish();
             } else {
-                Toast.makeText(getApplicationContext(), "Sing up not successful", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.registration_not_successful, Toast.LENGTH_SHORT).show();
             }
         });
     }
