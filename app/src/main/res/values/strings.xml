@@ -32,4 +32,25 @@
     <string name="check_email">Please check your email</string>
     <string name="problem">There was a problem</string>
     <string name="logout">Logout</string>
+    <string name="pedestrian_crossing_warning">Attention! Pedestrian crossing ahead</string>
+    <string name="pedestrian_crossing">Approaching pedestrian crossing</string>
+    <string name="give_way">Attention! Give way</string>
+    <string name="stop">Attention! Prepare to stop</string>
+    <string name="priority_road">You are on a priority road</string>
+    <string name="roundabout">Approaching roundabout\n</string>
+    <string name="roundabout_warning">Attention! Roundabout ahead</string>
+    <string name="speed_limit_50">Speed limit is 50 km/h</string>
+    <string name="speed_limit_60">Speed limit is 60 km/h</string>
+    <string name="speed_limit_70">Speed limit is 70 km/h</string>
+    <string name="speed_limit_80">Speed limit is 80 km/h</string>
+    <string name="speed_limit_90">Speed limit is 90 km/h</string>
+    <string name="dangerous_curve_left">Dangerous curve to the left</string>
+    <string name="dangerous_curve_right">Dangerous curve to the right</string>
+    <string name="right_bend">Bend to the right</string>
+    <string name="left_bend">Bend to the left\n</string>
+    <string name="double_curve">Double curve ahead, proceed with caution</string>
+    <string name="road_narrows">Road narrows ahead</string>
+    <string name="road_narrows_left">Road narrows on the left side\n</string>
+    <string name="road_narrows_right">Road narrows on the right side</string>
+    <string name="undefined">Undefined sign announcement</string>
 </resources>

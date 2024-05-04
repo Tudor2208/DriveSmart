@@ -33,4 +33,25 @@
     <string name="check_email">Te rog să verifici email-ul</string>
     <string name="problem">A fost o problema</string>
     <string name="logout">Deconectare</string>
+    <string name="pedestrian_crossing_warning">Atenție! Trecere de pietoni în față</string>
+    <string name="pedestrian_crossing">Trecere de pietoni</string>
+    <string name="give_way">Atenție! Cedează trecerea</string>
+    <string name="stop">Atenție! Pregătește-te să oprești</string>
+    <string name="priority_road">Te afli pe un drum cu prioritate</string>
+    <string name="roundabout">Sens giratoriu</string>
+    <string name="roundabout_warning">Atenție! Sens giratoriu în față</string>
+    <string name="speed_limit_50">Limita de viteză este de 50 kilometri pe oră</string>
+    <string name="speed_limit_60">Limita de viteză este de 60 kilometri pe oră</string>
+    <string name="speed_limit_70">Limita de viteză este de 70 kilometri pe oră</string>
+    <string name="speed_limit_80">Limita de viteză este de 80 kilometri pe oră</string>
+    <string name="speed_limit_90">Limita de viteză este de 90 kilometri pe oră</string>
+    <string name="dangerous_curve_left">Curbă periculoasă la stânga</string>
+    <string name="dangerous_curve_right">Curbă periculoasă la dreapta</string>
+    <string name="right_bend">Curbă la dreapta</string>
+    <string name="left_bend">Curbă la stânga</string>
+    <string name="double_curve">Curbă dublă în față</string>
+    <string name="road_narrows">Drum îngustat pe ambele părți</string>
+    <string name="road_narrows_left">Drum îngustat pe partea stânga</string>
+    <string name="road_narrows_right">Drum îngustat pe partea dreaptă</string>
+    <string name="undefined">Anunț nedefinit</string>
 </resources>

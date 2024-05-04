@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -28,6 +29,7 @@ import android.view.TextureView;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class DrivingActivity extends AppCompatActivity {
@@ -40,9 +42,11 @@ public class DrivingActivity extends AppCompatActivity {
     ImageView imageView;
     Bitmap bitmap;
     Yolov5TFLiteDetector detector;
+    TrafficSignSoundManager soundManager;
     Paint boxPaint = new Paint();
     Paint textPaint = new Paint();
-
+    private final HashMap<String, Long> lastPlayed = new HashMap<>();
+    private static final long DELAY = 10000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +75,14 @@ public class DrivingActivity extends AppCompatActivity {
         boxPaint.setStrokeWidth(5);
         boxPaint.setAntiAlias(true);
 
+        soundManager = new TrafficSignSoundManager(this);
         setupTextureView();
+    }
+
+    @Override
+    protected void onDestroy() {
+        soundManager.shutdown();
+        super.onDestroy();
     }
 
     private void setupTextureView() {
@@ -94,15 +105,24 @@ public class DrivingActivity extends AppCompatActivity {
             @Override
             public void onSurfaceTextureUpdated(@NonNull SurfaceTexture surfaceTexture) {
                 bitmap = textureView.getBitmap();
-                ArrayList<Recognition> detections = detector.detect(bitmap);
+                ArrayList<Recognition> recognitions = detector.detect(bitmap);
                 Bitmap mutableBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
                 Canvas canvas = new Canvas(mutableBitmap);
 
-                for(Recognition recognition: detections){
-                    if(recognition.getConfidence() > 0.4){
+                for(Recognition recognition: recognitions) {
+                    if(recognition.getConfidence() > 0.5) {
+
                         RectF location = recognition.getLocation();
                         canvas.drawRect(location, boxPaint);
-                        canvas.drawText(recognition.getLabelName() + ":" + recognition.getConfidence(), location.left, location.top, textPaint);
+                        canvas.drawText(recognition.getLabelName(), location.left, location.top, textPaint);
+
+                        long currentTime = System.currentTimeMillis();
+                        String labelName = recognition.getLabelName();
+
+                        if (!lastPlayed.containsKey(labelName) || currentTime - lastPlayed.get(labelName) > DELAY) {
+                            soundManager.announceSign(recognition.getLabelName());
+                            lastPlayed.put(labelName, currentTime);
+                        }
                     }
                 }
                 imageView.setImageBitmap(mutableBitmap);
