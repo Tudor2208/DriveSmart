@@ -53,4 +53,16 @@
     <string name="road_narrows_left">Road narrows on the left side\n</string>
     <string name="road_narrows_right">Road narrows on the right side</string>
     <string name="undefined">Undefined sign announcement</string>
+    <string name="stop_driving">Finish trip</string>
+    <string name="finish_trip_confirm">Do you really want to finish the trip?</string>
+    <string name="confirm_exit">Confirm Exit</string>
+    <string name="get_location_error">Could not get your location</string>
+    <string name="confirm_new_trip">Confirm new trip</string>
+    <string name="new_trip_message">Are you sure you want to start a new trip?</string>
+    <string name="journey">Journey</string>
+    <string name="name">Name</string>
+    <string name="start">Start</string>
+    <string name="end">End</string>
+    <string name="duration">Duration</string>
+    <string name="undefined_name">Undefined name</string>
 </resources>

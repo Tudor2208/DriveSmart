@@ -22,6 +22,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+
 public class MenuActivity extends AppCompatActivity {
 
     TextView helloTextView, usernameTextView;
@@ -31,6 +32,7 @@ public class MenuActivity extends AppCompatActivity {
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
     Button startDrivingButton;
+    Button myJourneysButton;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -72,19 +74,38 @@ public class MenuActivity extends AppCompatActivity {
 
         logoutButton = findViewById(R.id.logout_button);
         logoutButton.setOnClickListener(view -> {
-            showDialogMessage();
+            showLogoutDialogMessage();
         });
 
         startDrivingButton = findViewById(R.id.start_driving_button);
-        startDrivingButton.setOnClickListener(view -> startActivity(new Intent(getApplicationContext(), DrivingActivity.class)));
+        startDrivingButton.setOnClickListener(view -> showStartDrivingDialogMessage());
+
+        myJourneysButton = findViewById(R.id.my_journeys_button);
+        myJourneysButton.setOnClickListener(view -> startActivity(new Intent(getApplicationContext(), MyJourneysActivity.class)));
     }
 
-    private void showDialogMessage() {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-        alertDialog.setTitle(R.string.logout)
-                .setMessage(R.string.dialog_logout)
+    private void startDriving() {
+        Intent intent = new Intent(getApplicationContext(), DrivingActivity.class);
+        long currentTime = System.currentTimeMillis();
+        intent.putExtra("startDrivingTime", currentTime);
+
+        startActivity(intent);
+    }
+
+    private void showStartDrivingDialogMessage() {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.confirm_new_trip)
+                .setMessage(R.string.new_trip_message)
+                .setPositiveButton(R.string.yes, (dialog, which) -> startDriving())
                 .setNegativeButton(R.string.no, (dialogInterface, i) -> dialogInterface.cancel())
-                .setPositiveButton(R.string.yes, (dialogInterface, i) -> {
+                .show();
+    }
+
+    private void showLogoutDialogMessage() {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.logout)
+                .setMessage(R.string.dialog_logout)
+                .setPositiveButton(R.string.yes, (dialog, which) -> {
                     auth.signOut();
                     editor.remove("email_key");
                     editor.remove("password_key");
@@ -92,7 +113,8 @@ public class MenuActivity extends AppCompatActivity {
                     editor.apply();
                     startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                     finish();
-                }).show();
-        alertDialog.create();
+                })
+                .setNegativeButton(R.string.no, (dialogInterface, i) -> dialogInterface.cancel())
+                .show();
     }
 }

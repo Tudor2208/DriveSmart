@@ -54,4 +54,16 @@
     <string name="road_narrows_left">Drum îngustat pe partea stânga</string>
     <string name="road_narrows_right">Drum îngustat pe partea dreaptă</string>
     <string name="undefined">Anunț nedefinit</string>
+    <string name="stop_driving">Finalizează călătoria</string>
+    <string name="finish_trip_confirm">Ești sigur că vrei să finalizezi călătoria?</string>
+    <string name="confirm_exit">Confirmă ieșirea</string>
+    <string name="get_location_error">Nu s-a putut obține locația dvs.</string>
+    <string name="confirm_new_trip">Confirmă o călătorie nouă</string>
+    <string name="new_trip_message">Ești sigur că vrei să începi o nouă călătorie?</string>
+    <string name="journey">Călătorie</string>
+    <string name="name">Nume</string>
+    <string name="start">Început</string>
+    <string name="end">Sfârșit</string>
+    <string name="duration">Durata</string>
+    <string name="undefined_name">Nume nedefinit</string>
 </resources>

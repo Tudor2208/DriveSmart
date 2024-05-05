@@ -5,8 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -26,7 +27,13 @@ import android.os.HandlerThread;
 import android.util.Log;
 import android.view.Surface;
 import android.view.TextureView;
+import android.widget.Button;
 import android.widget.ImageView;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,6 +42,11 @@ import java.util.List;
 public class DrivingActivity extends AppCompatActivity {
 
     static final int CAMERA_REQUEST_CODE = 101;
+    private final HashMap<String, Long> lastPlayed = new HashMap<>();
+    private static final long DELAY = 10000;
+    private DatabaseReference databaseReference;
+    private FirebaseUser user;
+
     TextureView textureView;
     CameraManager cameraManager;
     CameraDevice cameraDevice;
@@ -45,8 +57,7 @@ public class DrivingActivity extends AppCompatActivity {
     TrafficSignSoundManager soundManager;
     Paint boxPaint = new Paint();
     Paint textPaint = new Paint();
-    private final HashMap<String, Long> lastPlayed = new HashMap<>();
-    private static final long DELAY = 10000;
+    Button finishTripButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +87,49 @@ public class DrivingActivity extends AppCompatActivity {
         boxPaint.setAntiAlias(true);
 
         soundManager = new TrafficSignSoundManager(this);
+        finishTripButton = findViewById(R.id.finish_trip_button);
+
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+
+        finishTripButton.setOnClickListener(view -> {
+            showConfirmFinishTripDialog();
+        });
+
         setupTextureView();
+    }
+
+    private void finishTrip() {
+        Intent intent = getIntent();
+
+        long startDrivingTime = intent.getLongExtra("startDrivingTime", 0);
+        long endDrivingTime = System.currentTimeMillis();
+        long duration = endDrivingTime - startDrivingTime;
+
+        if (user != null) {
+            DatabaseReference userTrips = databaseReference.child("Users").child(user.getUid()).child("Trips");
+            DatabaseReference newTrip = userTrips.push();
+            newTrip.child("startTime").setValue(startDrivingTime);
+            newTrip.child("endTime").setValue(endDrivingTime);
+            newTrip.child("duration").setValue(duration);
+        }
+
+        startActivity(new Intent(getApplicationContext(), MenuActivity.class));
+        finish();
+    }
+
+    private void showConfirmFinishTripDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.confirm_exit)
+                .setMessage(R.string.finish_trip_confirm)
+                .setPositiveButton(R.string.yes, (dialog, which) -> finishTrip())
+                .setNegativeButton(R.string.no, (dialogInterface, i) -> dialogInterface.cancel())
+                .show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        showConfirmFinishTripDialog();
     }
 
     @Override
@@ -139,10 +192,13 @@ public class DrivingActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == CAMERA_REQUEST_CODE && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            openCamera();
-        } else {
-            Log.e("DrivingActivity", "Camera permission not granted.");
+
+        if (requestCode == CAMERA_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                openCamera();
+            } else {
+                Log.e("DrivingActivity", "Camera permission not granted.");
+            }
         }
     }
 

@@ -9,16 +9,17 @@
 
     <TextView
         android:id="@+id/drive_smart_text_view"
-        android:layout_width="315dp"
-        android:layout_height="55dp"
+        android:layout_width="313dp"
+        android:layout_height="54dp"
         android:layout_marginTop="268dp"
         android:layout_weight="1"
         android:fontFamily="@font/dm_sans"
         android:text="@string/app_name"
         android:textColor="#FFFFFF"
         android:textSize="48sp"
+        android:translationX="25dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.708"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
