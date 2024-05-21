@@ -1,13 +1,20 @@
 package com.tudor.drivesmart;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -32,7 +39,7 @@ public class JourneySummaryActivity extends AppCompatActivity {
 
         summaryTitleTextView = findViewById(R.id.summary_title_text_view);
 
-        Intent intent = getIntent();;
+        Intent intent = getIntent();
         int index = intent.getIntExtra("index", 0);
         summaryTitleTextView.setText(String.format("%s #%d", getString(R.string.journey), index));
 
@@ -51,6 +58,37 @@ public class JourneySummaryActivity extends AppCompatActivity {
         String formattedDuration = formatDuration(duration);
 
         infoList.add(String.format("%s: %s", getString(R.string.duration), formattedDuration));
+
+        summaryListView.setOnItemLongClickListener((adapterView, view, i, l) -> {
+            if (i == 0) {
+                showEditJourneyNameDialog();
+            }
+            return true;
+        });
+    }
+
+    private void showEditJourneyNameDialog() {
+        EditText editTextField = new EditText(this);
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle(R.string.edit_journey_name)
+                .setMessage(R.string.edit_journey_name_message)
+                .setView(editTextField)
+                .setPositiveButton(R.string.ok, (dialogInterface, i) -> {
+                    String newName = editTextField.getText().toString();
+                    handleUserInput(newName);
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .create();
+        dialog.show();
+    }
+
+    private void handleUserInput(String newName) {
+        String key = getIntent().getStringExtra("key");
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference tripRef = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUser.getUid()).child("Trips").child(key);
+        tripRef.child("name").setValue(newName);
+        infoList.set(0, String.format("%s: %s", getString(R.string.name), newName));
+        adapter.notifyDataSetChanged();
     }
 
     private String formatDuration(long millis) {

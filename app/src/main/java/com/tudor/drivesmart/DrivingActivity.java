@@ -41,12 +41,6 @@ import java.util.List;
 
 public class DrivingActivity extends AppCompatActivity {
 
-    static final int CAMERA_REQUEST_CODE = 101;
-    private final HashMap<String, Long> lastPlayed = new HashMap<>();
-    private static final long DELAY = 10000;
-    private DatabaseReference databaseReference;
-    private FirebaseUser user;
-
     TextureView textureView;
     CameraManager cameraManager;
     CameraDevice cameraDevice;
@@ -58,6 +52,11 @@ public class DrivingActivity extends AppCompatActivity {
     Paint boxPaint = new Paint();
     Paint textPaint = new Paint();
     Button finishTripButton;
+    DatabaseReference databaseReference;
+    FirebaseUser user;
+    private static final int CAMERA_REQUEST_CODE = 101;
+    private static final long DELAY = 10000;
+    private final HashMap<String, Long> lastPlayed = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,9 +91,7 @@ public class DrivingActivity extends AppCompatActivity {
         user = FirebaseAuth.getInstance().getCurrentUser();
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
-        finishTripButton.setOnClickListener(view -> {
-            showConfirmFinishTripDialog();
-        });
+        finishTripButton.setOnClickListener(view -> showConfirmFinishTripDialog());
 
         setupTextureView();
     }

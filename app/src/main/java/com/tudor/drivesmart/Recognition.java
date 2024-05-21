@@ -1,25 +1,20 @@
 package com.tudor.drivesmart;
 
+import android.annotation.SuppressLint;
 import android.graphics.RectF;
+
+import androidx.annotation.NonNull;
+
 public class Recognition {
-    /** Display name for the recognition. */
-    private Integer labelId;
+
+    private final Integer labelId;
     private String labelName;
-    private Float labelScore;
-
-    /**
-     * A sortable score for how good the recognition is relative to others. Higher should be better.
-     */
-    private Float confidence;
-
-
-    /** Optional location within the source image for the location of the recognized object. */
-    private RectF location;
+    private final Float confidence;
+    private final RectF location;
 
     public Recognition(
-            final int labelId, final String labelName, final Float labelScore,  final Float confidence, final RectF location) {
+            final int labelId, final String labelName,  final Float confidence, final RectF location) {
         this.labelId = labelId;
-        this.labelScore = labelScore;
         this.labelName = labelName;
         this.confidence = confidence;
         this.location = location;
@@ -33,8 +28,6 @@ public class Recognition {
         return labelName;
     }
 
-    public Float getLabelScore() {return labelScore;}
-
     public Float getConfidence() {
         return confidence;
     }
@@ -43,22 +36,11 @@ public class Recognition {
         return new RectF(location);
     }
 
-    public void setLocation(RectF location) {
-        this.location = location;
-    }
-
     public void setLabelName(String labelName) {this.labelName = labelName;}
 
-    public void setLabelId(int labelId) {this.labelId = labelId;}
 
-    public void setLabelScore(Float labelScore) {
-        this.labelScore = labelScore;
-    }
-
-    public void setConfidence(Float confidence) {
-        this.confidence = confidence;
-    }
-
+    @NonNull
+    @SuppressLint("DefaultLocale")
     @Override
     public String toString() {
         String resultString = "";

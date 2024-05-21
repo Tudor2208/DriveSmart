@@ -22,17 +22,17 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Objects;
 
 public class MenuActivity extends AppCompatActivity {
 
     TextView helloTextView, usernameTextView;
+    ImageButton logoutButton;
+    Button startDrivingButton, myJourneysButton;
     FirebaseAuth auth;
     DatabaseReference reference;
-    ImageButton logoutButton;
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
-    Button startDrivingButton;
-    Button myJourneysButton;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -50,35 +50,18 @@ public class MenuActivity extends AppCompatActivity {
         helloTextView.setText(helloTextView.getText() + ",");
 
         usernameTextView = findViewById(R.id.username_text_view);
-
-        FirebaseUser user = auth.getCurrentUser();
-        if (user != null) {
-            String uid = user.getUid();
-            DatabaseReference userRef = reference.child("Users").child(uid).child("userName");
-
-            userRef.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.exists()) {
-                        String username = dataSnapshot.getValue().toString();
-                        usernameTextView.setText(username + "!");
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                    Log.w("FirebaseDatabase", "loadUserName:onCancelled", databaseError.toException());
-                }
-            });
+        String username = sharedPreferences.getString("username_key", null);
+        if (username == null) {
+            setUsername();
+        } else {
+            usernameTextView.setText(username + "!");
         }
 
         logoutButton = findViewById(R.id.logout_button);
-        logoutButton.setOnClickListener(view -> {
-            showLogoutDialogMessage();
-        });
+        logoutButton.setOnClickListener(view -> showLogoutDialog());
 
         startDrivingButton = findViewById(R.id.start_driving_button);
-        startDrivingButton.setOnClickListener(view -> showStartDrivingDialogMessage());
+        startDrivingButton.setOnClickListener(view -> showStartDrivingDialog());
 
         myJourneysButton = findViewById(R.id.my_journeys_button);
         myJourneysButton.setOnClickListener(view -> startActivity(new Intent(getApplicationContext(), MyJourneysActivity.class)));
@@ -92,7 +75,7 @@ public class MenuActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void showStartDrivingDialogMessage() {
+    private void showStartDrivingDialog() {
         new AlertDialog.Builder(this)
                 .setTitle(R.string.confirm_new_trip)
                 .setMessage(R.string.new_trip_message)
@@ -101,7 +84,7 @@ public class MenuActivity extends AppCompatActivity {
                 .show();
     }
 
-    private void showLogoutDialogMessage() {
+    private void showLogoutDialog() {
         new AlertDialog.Builder(this)
                 .setTitle(R.string.logout)
                 .setMessage(R.string.dialog_logout)
@@ -110,11 +93,39 @@ public class MenuActivity extends AppCompatActivity {
                     editor.remove("email_key");
                     editor.remove("password_key");
                     editor.remove("checkbox_key");
+                    editor.remove("username_key");
+
                     editor.apply();
                     startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                     finish();
                 })
                 .setNegativeButton(R.string.no, (dialogInterface, i) -> dialogInterface.cancel())
                 .show();
+    }
+
+    private void setUsername() {
+        FirebaseUser user = auth.getCurrentUser();
+        if (user != null) {
+            String uid = user.getUid();
+            DatabaseReference userRef = reference.child("Users").child(uid).child("username");
+
+            userRef.addValueEventListener(new ValueEventListener() {
+                @SuppressLint("SetTextI18n")
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        String username = Objects.requireNonNull(dataSnapshot.getValue()).toString();
+                        usernameTextView.setText(username + "!");
+                        editor.putString("username_key", username);
+                        editor.apply();
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Log.w("FirebaseDatabase", "loadUserName:onCancelled", databaseError.toException());
+                }
+            });
+        }
     }
 }

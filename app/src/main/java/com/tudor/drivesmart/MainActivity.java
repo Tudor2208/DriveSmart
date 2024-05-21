@@ -23,9 +23,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         smartDriveTextView = findViewById(R.id.drive_smart_text_view);
-        smartDriveTextView.setText("");
-
         carImageView = findViewById(R.id.car_image_view);
+
+        smartDriveTextView.setText("");
         carAnimation = AnimationUtils.loadAnimation(this, R.anim.car_animation);
 
         MediaPlayer mediaPlayer;

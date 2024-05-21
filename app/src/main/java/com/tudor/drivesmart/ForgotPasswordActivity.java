@@ -21,12 +21,14 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgot_password);
 
+        auth = FirebaseAuth.getInstance();
+
         resetPasswordButton = findViewById(R.id.reset_password_button);
         resetPasswordEditText = findViewById(R.id.reset_password_email);
-        auth = FirebaseAuth.getInstance();
 
         resetPasswordButton.setOnClickListener(view -> {
             String email = resetPasswordEditText.getText().toString();
+
             if (email.isEmpty()) {
                 Toast.makeText(getApplicationContext(), R.string.empty_email, Toast.LENGTH_SHORT).show();
             } else {
@@ -36,7 +38,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                         startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                         finish();
                     } else {
-                        Toast.makeText(getApplicationContext(), R.string.problem, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), R.string.error_occured, Toast.LENGTH_SHORT).show();
                     }
                 });
             }

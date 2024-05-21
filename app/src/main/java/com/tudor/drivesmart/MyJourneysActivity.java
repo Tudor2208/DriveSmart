@@ -1,6 +1,7 @@
 package com.tudor.drivesmart;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -39,6 +41,7 @@ public class MyJourneysActivity extends AppCompatActivity {
 
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, journeyList);
         listViewJourneys.setAdapter(adapter);
+
         listViewJourneys.setOnItemClickListener((adapterView, view, i, l) -> {
             DataSnapshot selectedJourneySnapshot = snapshotList.get(i);
 
@@ -63,15 +66,41 @@ public class MyJourneysActivity extends AppCompatActivity {
             });
 
             Optional<Long> durationOptional = Optional.ofNullable(selectedJourneySnapshot.child("duration").getValue(Long.class));
-            durationOptional.ifPresent(duration -> {
-                intent.putExtra("duration", duration);
-            });
+            durationOptional.ifPresent(duration -> intent.putExtra("duration", duration));
 
-
+            intent.putExtra("key", selectedJourneySnapshot.getKey());
             startActivity(intent);
         });
 
+        listViewJourneys.setOnItemLongClickListener((adapterView, view, i, l) -> {
+            DataSnapshot selectedJourneySnapshot = snapshotList.get(i);
+            showDeleteJourneyDialog(selectedJourneySnapshot);
+            return true;
+        });
+
         fetchJourneys();
+    }
+
+    private void showDeleteJourneyDialog(DataSnapshot selectedJourneySnapshot) {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.confirm_delete_journey)
+                .setMessage(R.string.delete_trip_message)
+                .setPositiveButton(R.string.yes, (dialog, which) -> deleteJourney(selectedJourneySnapshot))
+                .setNegativeButton(R.string.no, (dialogInterface, i) -> dialogInterface.cancel())
+                .show();
+    }
+
+    private void deleteJourney(DataSnapshot selectedJourneySnapshot) {
+        selectedJourneySnapshot.getRef().removeValue().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Toast.makeText(this, R.string.deleted_journey, Toast.LENGTH_SHORT).show();
+                snapshotList.remove(selectedJourneySnapshot);
+                adapter.notifyDataSetChanged();
+            } else {
+                Toast.makeText(this, R.string.failed_item_delete, Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     private void fetchJourneys() {
@@ -80,6 +109,7 @@ public class MyJourneysActivity extends AppCompatActivity {
                 .child(Objects.requireNonNull(auth.getCurrentUser()).getUid()).child("Trips");
 
         databaseReference.addValueEventListener(new ValueEventListener() {
+            @SuppressLint("DefaultLocale")
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 journeyList.clear();
@@ -89,9 +119,9 @@ public class MyJourneysActivity extends AppCompatActivity {
                     snapshotList.add(snapshot);
                     String name = snapshot.child("name").getValue(String.class);
                     if (name != null) {
-                        journeyList.add("Journey #" + counter + "\nName: " + name);
+                        journeyList.add(String.format("%s #%d\n%s: %s", getString(R.string.journey), counter, getString(R.string.name), name));
                     } else {
-                        journeyList.add("Journey #" + counter);
+                        journeyList.add(String.format("%s #%d", getString(R.string.journey), counter));
                     }
                     counter ++;
                 }

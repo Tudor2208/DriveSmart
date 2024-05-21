@@ -30,19 +30,20 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         auth = FirebaseAuth.getInstance();
-        emailEditText = findViewById(R.id.email_edit_text);
-        passwordEditText = findViewById(R.id.password_edit_text);
+        emailEditText = findViewById(R.id.login_email_edit_text);
+        passwordEditText = findViewById(R.id.login_password_edit_text);
         forgotTextView = findViewById(R.id.forgot_text_view);
         login_button = findViewById(R.id.login_button);
-        sign_up_button = findViewById(R.id.sign_up_button);
+        sign_up_button = findViewById(R.id.login_signup_button);
         rememberMeCheckBox = findViewById(R.id.remember_me_check);
 
         sharedPreferences = getSharedPreferences("saveData", Context.MODE_PRIVATE);
         boolean isRemembered = sharedPreferences.getBoolean("checkbox_key", false);
+
         if (isRemembered) {
             String email = sharedPreferences.getString("email_key", "");
             String password = sharedPreferences.getString("password_key", "");
-            signin(email, password, true);
+            login(email, password, true);
         }
 
         login_button.setOnClickListener(view -> {
@@ -51,22 +52,18 @@ public class LoginActivity extends AppCompatActivity {
             boolean isChecked = rememberMeCheckBox.isChecked();
 
             if (!email.isEmpty() && !password.isEmpty()) {
-                signin(email, password, isChecked);
+                login(email, password, isChecked);
             } else {
-                Toast.makeText(getApplicationContext(), R.string.enter_email_password, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.fill_in_all_fields, Toast.LENGTH_SHORT).show();
             }
         });
 
-        sign_up_button.setOnClickListener(view -> {
-            startActivity(new Intent(getApplicationContext(), SignupActivity.class));
-        });
+        sign_up_button.setOnClickListener(view -> startActivity(new Intent(getApplicationContext(), SignupActivity.class)));
 
-        forgotTextView.setOnClickListener(view -> {
-            startActivity(new Intent(getApplicationContext(), ForgotPasswordActivity.class));
-        });
+        forgotTextView.setOnClickListener(view -> startActivity(new Intent(getApplicationContext(), ForgotPasswordActivity.class)));
     }
 
-    private void signin(String email, String password, boolean isChecked) {
+    private void login(String email, String password, boolean isChecked) {
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
 

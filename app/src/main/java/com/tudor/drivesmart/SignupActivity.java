@@ -1,5 +1,6 @@
 package com.tudor.drivesmart;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -12,14 +13,20 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class SignupActivity extends AppCompatActivity {
 
     EditText usernameEditText, passwordEditText, emailEditText, confirmPasswordEditText;
+    Button signupButton;
     FirebaseAuth auth;
     FirebaseDatabase database;
     DatabaseReference reference;
-    Button signupButton;
 
+    private static final String PASSWORD_PATTERN = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
+    private static final Pattern pattern = Pattern.compile(PASSWORD_PATTERN);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,10 +37,10 @@ public class SignupActivity extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         reference = database.getReference();
 
-        usernameEditText = findViewById(R.id.username_signup_edit_text);
-        emailEditText = findViewById(R.id.email_signup_edit_text);
-        passwordEditText = findViewById(R.id.password_signup_edit_text);
-        confirmPasswordEditText = findViewById(R.id.confirm_password_edit_text);
+        usernameEditText = findViewById(R.id.signup_username_edit_text);
+        emailEditText = findViewById(R.id.signup_email_edit_text);
+        passwordEditText = findViewById(R.id.signup_password_edit_text);
+        confirmPasswordEditText = findViewById(R.id.signup_confirm_password_edit_text);
         signupButton = findViewById(R.id.signup_button);
 
         signupButton.setOnClickListener(view -> {
@@ -43,30 +50,38 @@ public class SignupActivity extends AppCompatActivity {
             String password2 = confirmPasswordEditText.getText().toString();
 
             if (!email.isEmpty() && !username.isEmpty() && !password.isEmpty() && ! password2.isEmpty()) {
-                if (password.length() < 8) {
-                    Toast.makeText(getApplicationContext(), R.string.password_length, Toast.LENGTH_SHORT).show();
-                } else {
-                    if (password.equals(password2)) {
+                if (password.equals(password2)) {
+                    Matcher matcher = pattern.matcher(password);
+                    if (matcher.matches()) {
                         signup(username, email, password);
                     } else {
-                        Toast.makeText(getApplicationContext(), R.string.passwords_dont_match, Toast.LENGTH_SHORT).show();
+                        showWeakPasswordDialog();
                     }
+                } else {
+                    Toast.makeText(getApplicationContext(), R.string.passwords_dont_match, Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(getApplicationContext(), R.string.fill_in, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.fill_in_all_fields, Toast.LENGTH_SHORT).show();
             }
         });
+    }
 
+    private void showWeakPasswordDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.weak_password)
+                .setMessage(R.string.password_rules)
+                .setPositiveButton(R.string.ok, (dialog, which) -> dialog.cancel())
+                .show();
     }
 
     private void signup(String username, String email, String password) {
         auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                reference.child("Users").child(auth.getUid()).child("userName").setValue(username);
+                reference.child("Users").child(Objects.requireNonNull(auth.getUid())).child("username").setValue(username);
                 startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                 finish();
             } else {
-                Toast.makeText(getApplicationContext(), R.string.registration_not_successful, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.error_occured, Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -3,16 +3,11 @@ package com.tudor.drivesmart;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.RectF;
-import android.os.Build;
-import android.util.Log;
 import android.util.Size;
 import android.widget.Toast;
 
 import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.Interpreter;
-import org.tensorflow.lite.gpu.CompatibilityList;
-import org.tensorflow.lite.gpu.GpuDelegate;
-import org.tensorflow.lite.nnapi.NnApiDelegate;
 import org.tensorflow.lite.support.common.FileUtil;
 import org.tensorflow.lite.support.common.ops.NormalizeOp;
 import org.tensorflow.lite.support.image.ImageProcessor;
@@ -24,56 +19,33 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
 
 
 public class Yolov5TFLiteDetector {
 
-    private final Size INPUT_SIZE = new Size(640, 640);
+    private static final Size INPUT_SIZE = new Size(640, 640);
     private final int[] OUTPUT_SIZE = new int[]{1, 25200, 25};
-    private final float DETECT_THRESHOLD = 0.25f;
-
-    private final String LABEL_FILE = "labels.txt";
-
+    private static final float DETECT_THRESHOLD = 0.25f;
     private String MODEL_FILE;
-
     private Interpreter tflite;
     private List<String> associatedAxisLabels;
     Interpreter.Options options = new Interpreter.Options();
 
-    public String getModelFile() {
-        return this.MODEL_FILE;
-    }
 
-    public void setModelFile(String modelFile){
+    public void setModelFile(String modelFile) {
         MODEL_FILE = modelFile;
-
-        Log.d(">>> ", "MODEL NAME SET --- "+ MODEL_FILE + ", "+modelFile);
     }
-
-    public String getLabelFile() {
-        return this.LABEL_FILE;
-    }
-
-    public Size getInputSize(){return this.INPUT_SIZE;}
-    public int[] getOutputSize(){return this.OUTPUT_SIZE;}
-
 
     public void initialModel(Context activity) {
         try {
-
-            Log.d(">>> ", "loading model --- "+ MODEL_FILE);
             ByteBuffer tfliteModel = FileUtil.loadMappedFile(activity, MODEL_FILE);
             tflite = new Interpreter(tfliteModel, options);
-            Log.i("tfliteSupport", "Success reading model: " + MODEL_FILE);
 
+            String LABEL_FILE = "labels.txt";
             associatedAxisLabels = FileUtil.loadLabels(activity, LABEL_FILE);
-            Log.i("tfliteSupport", "Success reading label: " + LABEL_FILE);
-
         } catch (IOException e) {
-            Log.e("tfliteSupport", "Error reading model or label: ", e);
             Toast.makeText(activity, "load model error: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
@@ -84,8 +56,7 @@ public class Yolov5TFLiteDetector {
 
         TensorImage yolov5sTfliteInput;
         ImageProcessor imageProcessor;
-        imageProcessor =
-                new ImageProcessor.Builder()
+        imageProcessor = new ImageProcessor.Builder()
                         .add(new ResizeOp(INPUT_SIZE.getHeight(), INPUT_SIZE.getWidth(), ResizeOp.ResizeMethod.BILINEAR))
                         .add(new NormalizeOp(0, 255))
                         .build();
@@ -98,7 +69,6 @@ public class Yolov5TFLiteDetector {
         probabilityBuffer = TensorBuffer.createFixedSize(OUTPUT_SIZE, DataType.FLOAT32);
 
         if (null != tflite) {
-            Log.d(">>> ", yolov5sTfliteInput.getTensorBuffer().getFlatSize() + " " + probabilityBuffer.getFlatSize());
             tflite.run(yolov5sTfliteInput.getBuffer(), probabilityBuffer.getBuffer());
         }
 
@@ -129,14 +99,8 @@ public class Yolov5TFLiteDetector {
                 }
             }
 
-            Recognition r = new Recognition(
-                    labelId,
-                    "",
-                    maxLabelScores,
-                    confidence,
-                    new RectF(xmin, ymin, xmax, ymax));
-            allRecognitions.add(
-                    r);
+            Recognition r = new Recognition(labelId, "", confidence, new RectF(xmin, ymin, xmax, ymax));
+            allRecognitions.add(r);
         }
 
         ArrayList<Recognition> nmsRecognitions = nms(allRecognitions);
@@ -152,19 +116,12 @@ public class Yolov5TFLiteDetector {
     }
 
     protected ArrayList<Recognition> nms(ArrayList<Recognition> allRecognitions) {
-        ArrayList<Recognition> nmsRecognitions = new ArrayList<Recognition>();
+        ArrayList<Recognition> nmsRecognitions = new ArrayList<>();
 
         for (int i = 0; i < OUTPUT_SIZE[2]-5; i++) {
             PriorityQueue<Recognition> pq =
-                    new PriorityQueue<Recognition>(
-                            6300,
-                            new Comparator<Recognition>() {
-                                @Override
-                                public int compare(final Recognition l, final Recognition r) {
-                                    // Intentionally reversed to put high confidence at the head of the queue.
-                                    return Float.compare(r.getConfidence(), l.getConfidence());
-                                }
-                            });
+                    new PriorityQueue<>(6300,
+                            (l, r) -> Float.compare(r.getConfidence(), l.getConfidence()));
 
             for (int j = 0; j < allRecognitions.size(); ++j) {
                 if (allRecognitions.get(j).getLabelId() == i && allRecognitions.get(j).getConfidence() > DETECT_THRESHOLD) {
@@ -192,10 +149,10 @@ public class Yolov5TFLiteDetector {
     }
 
     protected ArrayList<Recognition> nmsAllClass(ArrayList<Recognition> allRecognitions) {
-        ArrayList<Recognition> nmsRecognitions = new ArrayList<Recognition>();
+        ArrayList<Recognition> nmsRecognitions = new ArrayList<>();
 
         PriorityQueue<Recognition> pq =
-                new PriorityQueue<Recognition>(
+                new PriorityQueue<>(
                         100,
                         (l, r) -> Float.compare(r.getConfidence(), l.getConfidence()));
 
@@ -245,30 +202,6 @@ public class Yolov5TFLiteDetector {
     protected float boxUnion(RectF a, RectF b) {
         float i = boxIntersection(a, b);
         return (a.right - a.left) * (a.bottom - a.top) + (b.right - b.left) * (b.bottom - b.top) - i;
-    }
-
-    public void addNNApiDelegate() {
-        NnApiDelegate nnApiDelegate;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            nnApiDelegate = new NnApiDelegate();
-            options.addDelegate(nnApiDelegate);
-        }
-    }
-
-    public void addGPUDelegate() {
-        CompatibilityList compatibilityList = new CompatibilityList();
-        if(compatibilityList.isDelegateSupportedOnThisDevice()){
-            GpuDelegate.Options delegateOptions = compatibilityList.getBestOptionsForThisDevice();
-            GpuDelegate gpuDelegate = new GpuDelegate();
-            options.addDelegate(gpuDelegate);
-            Log.i("tfliteSupport", "using gpu delegate.");
-        } else {
-            addThread(4);
-        }
-    }
-
-    public void addThread(int thread) {
-        options.setNumThreads(thread);
     }
 
 }

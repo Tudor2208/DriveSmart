@@ -11,6 +11,7 @@ import java.util.Locale;
 import java.util.Queue;
 
 public class TrafficSignSoundManager {
+
     private TextToSpeech tts;
     private final Handler ttsHandler;
     private final Context context;
@@ -19,9 +20,11 @@ public class TrafficSignSoundManager {
 
     public TrafficSignSoundManager(Context context) {
         this.context = context;
+
         HandlerThread handlerThread = new HandlerThread("TtsThread");
         handlerThread.start();
         ttsHandler = new Handler(handlerThread.getLooper());
+
         tts = new TextToSpeech(context, status -> {
             if (status == TextToSpeech.SUCCESS) {
                 Locale locale = Locale.getDefault();
@@ -56,6 +59,7 @@ public class TrafficSignSoundManager {
         ttsHandler.post(() -> {
             if (!isSpeaking && !queue.isEmpty()) {
                 String sign = queue.poll();
+                assert sign != null;
                 tts.speak(getSignAnnouncement(sign), TextToSpeech.QUEUE_FLUSH, null, Integer.toString(sign.hashCode()));
             }
         });
@@ -122,6 +126,7 @@ public class TrafficSignSoundManager {
             tts.stop();
             tts.shutdown();
         }
+
         if (ttsHandler != null) {
             ttsHandler.getLooper().quitSafely();
         }
