@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -66,15 +67,29 @@ public class LoginActivity extends AppCompatActivity {
     private void login(String email, String password, boolean isChecked) {
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
+                FirebaseUser user = auth.getCurrentUser();
+                if (user != null) {
+                    if (user.isEmailVerified()) {
+                        editor = sharedPreferences.edit();
+                        editor.putString("email_key", email);
+                        editor.putString("password_key", password);
+                        editor.putBoolean("checkbox_key", isChecked);
+                        editor.apply();
 
-                editor = sharedPreferences.edit();
-                editor.putString("email_key", email);
-                editor.putString("password_key", password);
-                editor.putBoolean("checkbox_key", isChecked);
-                editor.apply();
+                        startActivity(new Intent(getApplicationContext(), MenuActivity.class));
+                        finish();
+                    } else {
+                        auth.signOut();
+                        user.sendEmailVerification().addOnCompleteListener(verificationTask -> {
+                            if (verificationTask.isSuccessful()) {
+                                Toast.makeText(getApplicationContext(), R.string.verify_email_first, Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(getApplicationContext(), R.string.error_occured, Toast.LENGTH_SHORT).show();
+                            }
+                        });
 
-                startActivity(new Intent(getApplicationContext(), MenuActivity.class));
-                finish();
+                    }
+                }
             } else {
                 Toast.makeText(getApplicationContext(), R.string.invalid_credentials, Toast.LENGTH_SHORT).show();
             }

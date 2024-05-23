@@ -10,10 +10,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -77,9 +77,19 @@ public class SignupActivity extends AppCompatActivity {
     private void signup(String username, String email, String password) {
         auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                reference.child("Users").child(Objects.requireNonNull(auth.getUid())).child("username").setValue(username);
-                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-                finish();
+                FirebaseUser user = auth.getCurrentUser();
+                if (user != null) {
+                    user.sendEmailVerification().addOnCompleteListener(verificationTask -> {
+                        if (verificationTask.isSuccessful()) {
+                            reference.child("Users").child(user.getUid()).child("username").setValue(username);
+                            Toast.makeText(getApplicationContext(), R.string.check_email, Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                            finish();
+                        } else {
+                            Toast.makeText(getApplicationContext(), R.string.error_occured, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
             } else {
                 Toast.makeText(getApplicationContext(), R.string.error_occured, Toast.LENGTH_SHORT).show();
             }
