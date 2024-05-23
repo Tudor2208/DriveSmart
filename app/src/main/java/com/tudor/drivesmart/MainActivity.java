@@ -1,11 +1,15 @@
 package com.tudor.drivesmart;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -16,11 +20,14 @@ public class MainActivity extends AppCompatActivity {
     ImageView carImageView;
     TextView smartDriveTextView;
     Animation carAnimation;
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        sharedPreferences = getSharedPreferences("saveData", Context.MODE_PRIVATE);
 
         smartDriveTextView = findViewById(R.id.drive_smart_text_view);
         carImageView = findViewById(R.id.car_image_view);
@@ -30,6 +37,13 @@ public class MainActivity extends AppCompatActivity {
 
         MediaPlayer mediaPlayer;
         mediaPlayer = MediaPlayer.create(this, R.raw.car_sound);
+
+        boolean isDarkTheme = sharedPreferences.getBoolean("is_dark_theme", true);
+        if (isDarkTheme) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
 
         carImageView.setAnimation(carAnimation);
         carImageView.startAnimation(carAnimation);

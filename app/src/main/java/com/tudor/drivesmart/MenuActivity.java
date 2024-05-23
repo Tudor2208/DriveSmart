@@ -28,7 +28,7 @@ public class MenuActivity extends AppCompatActivity {
 
     TextView helloTextView, usernameTextView;
     ImageButton logoutButton;
-    Button startDrivingButton, myJourneysButton;
+    Button startDrivingButton, myJourneysButton, settingsButton;
     FirebaseAuth auth;
     DatabaseReference reference;
     SharedPreferences sharedPreferences;
@@ -65,6 +65,9 @@ public class MenuActivity extends AppCompatActivity {
 
         myJourneysButton = findViewById(R.id.my_journeys_button);
         myJourneysButton.setOnClickListener(view -> startActivity(new Intent(getApplicationContext(), MyJourneysActivity.class)));
+
+        settingsButton = findViewById(R.id.settings_button);
+        settingsButton.setOnClickListener(view -> startActivity(new Intent(getApplicationContext(), SettingsActivity.class)));
     }
 
     private void startDriving() {
@@ -94,6 +97,7 @@ public class MenuActivity extends AppCompatActivity {
                     editor.remove("password_key");
                     editor.remove("checkbox_key");
                     editor.remove("username_key");
+                    editor.remove("is_dark_theme");
 
                     editor.apply();
                     startActivity(new Intent(getApplicationContext(), LoginActivity.class));

@@ -77,4 +77,8 @@
     <string name="signup">Signup</string>
     <string name="verify_email_first">You must verify your email address first</string>
     <string name="email_verified">Your email address has been successfully validated</string>
+    <string name="edit_profile">Edit profile</string>
+    <string name="configure_traffic_alerts">Traffic alerts</string>
+    <string name="light">Light</string>
+    <string name="dark">Dark</string>
 </resources>
