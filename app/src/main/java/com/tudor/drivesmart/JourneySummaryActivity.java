@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -65,6 +66,8 @@ public class JourneySummaryActivity extends AppCompatActivity {
             }
             return true;
         });
+
+        Toast.makeText(getApplicationContext(), R.string.long_press_edit_journey_name, Toast.LENGTH_SHORT).show();
     }
 
     private void showEditJourneyNameDialog() {

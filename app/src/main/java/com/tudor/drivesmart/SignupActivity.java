@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -50,20 +51,29 @@ public class SignupActivity extends AppCompatActivity {
             String password2 = confirmPasswordEditText.getText().toString();
 
             if (!email.isEmpty() && !username.isEmpty() && !password.isEmpty() && ! password2.isEmpty()) {
-                if (password.equals(password2)) {
-                    Matcher matcher = pattern.matcher(password);
-                    if (matcher.matches()) {
-                        signup(username, email, password);
+                if (isValidUsername(username)) {
+                    if (password.equals(password2)) {
+                        Matcher matcher = pattern.matcher(password);
+                        if (matcher.matches()) {
+                            signup(username, email, password);
+                        } else {
+                            showWeakPasswordDialog();
+                        }
                     } else {
-                        showWeakPasswordDialog();
+                        Toast.makeText(getApplicationContext(), R.string.passwords_dont_match, Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(getApplicationContext(), R.string.passwords_dont_match, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), R.string.invalid_username, Toast.LENGTH_SHORT).show();
                 }
+
             } else {
                 Toast.makeText(getApplicationContext(), R.string.fill_in_all_fields, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private boolean isValidUsername(String username) {
+        return !username.isEmpty() && !username.contains(" ") && username.length() <= 10;
     }
 
     private void showWeakPasswordDialog() {
@@ -82,7 +92,7 @@ public class SignupActivity extends AppCompatActivity {
                     user.sendEmailVerification().addOnCompleteListener(verificationTask -> {
                         if (verificationTask.isSuccessful()) {
                             reference.child("Users").child(user.getUid()).child("username").setValue(username);
-                            Toast.makeText(getApplicationContext(), R.string.check_email, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), R.string.validate_email, Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                             finish();
                         } else {
@@ -91,7 +101,11 @@ public class SignupActivity extends AppCompatActivity {
                     });
                 }
             } else {
-                Toast.makeText(getApplicationContext(), R.string.error_occured, Toast.LENGTH_SHORT).show();
+                if (task.getException() instanceof FirebaseAuthUserCollisionException) {
+                    Toast.makeText(getApplicationContext(), R.string.email_already_used, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), R.string.error_occured, Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

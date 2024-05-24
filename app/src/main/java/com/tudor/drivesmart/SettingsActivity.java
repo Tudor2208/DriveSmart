@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
@@ -45,6 +46,8 @@ public class SettingsActivity extends AppCompatActivity {
             editor.apply();
             recreate();
         });
+
+        editProfileButton.setOnClickListener(view -> startActivity(new Intent(getApplicationContext(), EditProfileActivity.class)));
     }
 
 }

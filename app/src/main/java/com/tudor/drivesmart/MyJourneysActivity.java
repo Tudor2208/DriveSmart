@@ -79,6 +79,8 @@ public class MyJourneysActivity extends AppCompatActivity {
         });
 
         fetchJourneys();
+
+        Toast.makeText(getApplicationContext(), R.string.long_press_delete_journey, Toast.LENGTH_SHORT).show();
     }
 
     private void showDeleteJourneyDialog(DataSnapshot selectedJourneySnapshot) {

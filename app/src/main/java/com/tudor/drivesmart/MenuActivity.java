@@ -50,12 +50,7 @@ public class MenuActivity extends AppCompatActivity {
         helloTextView.setText(helloTextView.getText() + ",");
 
         usernameTextView = findViewById(R.id.username_text_view);
-        String username = sharedPreferences.getString("username_key", null);
-        if (username == null) {
-            setUsername();
-        } else {
-            usernameTextView.setText(username + "!");
-        }
+        setUsername();
 
         logoutButton = findViewById(R.id.logout_button);
         logoutButton.setOnClickListener(view -> showLogoutDialog());
@@ -97,7 +92,6 @@ public class MenuActivity extends AppCompatActivity {
                     editor.remove("password_key");
                     editor.remove("checkbox_key");
                     editor.remove("username_key");
-                    editor.remove("is_dark_theme");
 
                     editor.apply();
                     startActivity(new Intent(getApplicationContext(), LoginActivity.class));
