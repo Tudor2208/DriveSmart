@@ -57,8 +57,8 @@
     <string name="new_trip_message">Are you sure you want to start a new journey?</string>
     <string name="journey">Journey</string>
     <string name="name">Name</string>
-    <string name="start">Start</string>
-    <string name="end">End</string>
+    <string name="start">From</string>
+    <string name="end">To</string>
     <string name="duration">Duration</string>
     <string name="undefined_name">undefined</string>
     <string name="deleted_journey">This journey has been successfully deleted!</string>
@@ -103,8 +103,11 @@
     <string name="failed_reauthentication">Your re-authentication has failed</string>
     <string name="traffic_signs_announced">Choose which of the following traffic signs should be announced</string>
     <string name="long_press_change_sign_status">Long press on a sign to enable / disable the announcement for it</string>
-    <string name="confirm_enable_sign">Are you sure you want to ENABLE the announcement for this traffic sign?</string>
-    <string name="confirm_disable_sign">Are you sure you want to DISABLE the announcement for this traffic sign?</string>
+    <string name="confirm_enable_sign">Are you sure you want to enable the announcement for this traffic sign?</string>
+    <string name="confirm_disable_sign">Are you sure you want to disable the announcement for this traffic sign?</string>
     <string name="enable">Enable</string>
     <string name="disable">Disable</string>
+    <string name="camera_permission_denied">Camera permission denied</string>
+    <string name="gps_permission_denied">GPS permission denied</string>
+    <string name="date">Date</string>
 </resources>

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -22,14 +23,18 @@ import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraDevice;
 import android.hardware.camera2.CameraManager;
 import android.hardware.camera2.CaptureRequest;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.Looper;
 import android.util.Log;
 import android.view.Surface;
 import android.view.TextureView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -56,15 +61,23 @@ public class DrivingActivity extends AppCompatActivity {
     DatabaseReference databaseReference;
     FirebaseUser user;
     SharedPreferences sharedPreferences;
+    Location start, end;
+    private Handler locationHandler;
+    private Runnable locationRunnable;
     private static final int CAMERA_REQUEST_CODE = 101;
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 102;
+    private LocationManager locationManager;
     private static final long DELAY = 10000;
     private final HashMap<String, Long> lastPlayed = new HashMap<>();
 
+    @SuppressLint("MissingPermission")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driving);
         checkAndRequestPermissions();
+
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
         sharedPreferences = getSharedPreferences("saveData", Context.MODE_PRIVATE);
 
@@ -113,6 +126,11 @@ public class DrivingActivity extends AppCompatActivity {
             newTrip.child("startTime").setValue(startDrivingTime);
             newTrip.child("endTime").setValue(endDrivingTime);
             newTrip.child("duration").setValue(duration);
+            newTrip.child("startLat").setValue(start.getLatitude());
+            newTrip.child("startLong").setValue(start.getLongitude());
+            newTrip.child("endLat").setValue(end.getLatitude());
+            newTrip.child("endLong").setValue(end.getLongitude());
+
         }
 
         startActivity(new Intent(getApplicationContext(), MenuActivity.class));
@@ -136,6 +154,9 @@ public class DrivingActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         soundManager.shutdown();
+        if (locationHandler != null && locationRunnable != null) {
+            locationHandler.removeCallbacks(locationRunnable);
+        }
         super.onDestroy();
     }
 
@@ -144,6 +165,7 @@ public class DrivingActivity extends AppCompatActivity {
             @Override
             public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surfaceTexture, int width, int height) {
                 openCamera();
+                startGettingCoordinates();
             }
 
             @Override
@@ -188,6 +210,10 @@ public class DrivingActivity extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
         }
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
+        }
     }
 
     @Override
@@ -198,9 +224,35 @@ public class DrivingActivity extends AppCompatActivity {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 openCamera();
             } else {
-                Log.e("DrivingActivity", "Camera permission not granted.");
+                Toast.makeText(this, R.string.camera_permission_denied, Toast.LENGTH_SHORT).show();
             }
         }
+
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                startGettingCoordinates();
+            } else {
+                Toast.makeText(this, R.string.gps_permission_denied, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private void startGettingCoordinates() {
+        locationHandler = new Handler(Looper.getMainLooper());
+        locationRunnable = new Runnable() {
+            @Override
+            public void run() {
+                Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                if (start == null) {
+                    start = location;
+                }
+                end = location;
+                locationHandler.postDelayed(this, 5000);
+            }
+        };
+
+        locationHandler.post(locationRunnable);
     }
 
     private void openCamera() {

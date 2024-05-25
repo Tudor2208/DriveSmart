@@ -58,8 +58,8 @@
     <string name="new_trip_message">Ești sigur că vrei să începi o nouă călătorie?</string>
     <string name="journey">Călătorie</string>
     <string name="name">Nume</string>
-    <string name="start">Început</string>
-    <string name="end">Sfârșit</string>
+    <string name="start">De la</string>
+    <string name="end">Până la</string>
     <string name="duration">Durata</string>
     <string name="undefined_name">nedefinit</string>
     <string name="deleted_journey">Această călătorie a fost ștearsă cu succes!</string>
@@ -107,4 +107,7 @@
     <string name="confirm_disable_sign">Ești sigur că vrei să dezactivezi anunțul pentru acest semn?</string>
     <string name="enable">Activează</string>
     <string name="disable">Dezactivează</string>
+    <string name="camera_permission_denied">Permisiune refuzată pentru cameră</string>
+    <string name="gps_permission_denied">Permisiune refuzată pentru GPS</string>
+    <string name="date">Data</string>
 </resources>

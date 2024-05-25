@@ -68,6 +68,18 @@ public class MyJourneysActivity extends AppCompatActivity {
             Optional<Long> durationOptional = Optional.ofNullable(selectedJourneySnapshot.child("duration").getValue(Long.class));
             durationOptional.ifPresent(duration -> intent.putExtra("duration", duration));
 
+            Optional<Double> startLatOptional = Optional.ofNullable(selectedJourneySnapshot.child("startLat").getValue(Double.class));
+            startLatOptional.ifPresent(startLat -> intent.putExtra("startLat", startLat));
+
+            Optional<Double> endLatOptional = Optional.ofNullable(selectedJourneySnapshot.child("endLat").getValue(Double.class));
+            endLatOptional.ifPresent(endLat -> intent.putExtra("endLat", endLat));
+
+            Optional<Double> startLongOptional = Optional.ofNullable(selectedJourneySnapshot.child("startLong").getValue(Double.class));
+            startLongOptional.ifPresent(startLong -> intent.putExtra("startLong", startLong));
+
+            Optional<Double> endLongOptional = Optional.ofNullable(selectedJourneySnapshot.child("endLong").getValue(Double.class));
+            endLongOptional.ifPresent(endLong -> intent.putExtra("endLong", endLong));
+
             intent.putExtra("key", selectedJourneySnapshot.getKey());
             startActivity(intent);
         });

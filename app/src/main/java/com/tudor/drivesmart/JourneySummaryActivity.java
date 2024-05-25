@@ -5,7 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -17,7 +20,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Optional;
 
 public class JourneySummaryActivity extends AppCompatActivity {
@@ -49,11 +54,29 @@ public class JourneySummaryActivity extends AppCompatActivity {
 
         infoList.add(String.format("%s: %s", getString(R.string.name), name));
 
-        String startTime = intent.getStringExtra("startTime");
-        infoList.add(String.format("%s: %s", getString(R.string.start), startTime));
+        Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
+        double startLat = intent.getDoubleExtra("startLat", 0);
+        double endLat = intent.getDoubleExtra("endLat", 0);
 
-        String endTime = intent.getStringExtra("endTime");
-        infoList.add(String.format("%s: %s", getString(R.string.end), endTime));
+        double startLong = intent.getDoubleExtra("startLong", 0);
+        double endLong = intent.getDoubleExtra("endLong", 0);
+
+        try {
+            Address startAddress = geocoder.getFromLocation(startLat, startLong, 1).get(0);
+            Address endAddress = geocoder.getFromLocation(endLat, endLong, 1).get(0);
+
+            String startLocality = startAddress.getLocality();
+            String endLocality = endAddress.getLocality();
+
+            String startTime = intent.getStringExtra("startTime");
+            infoList.add(String.format("%s: %s\n%s: %s", getString(R.string.start), startLocality, getString(R.string.date), startTime));
+
+            String endTime = intent.getStringExtra("endTime");
+            infoList.add(String.format("%s: %s\n%s: %s", getString(R.string.end), endLocality, getString(R.string.date), endTime));
+
+        } catch (IOException e) {
+            Toast.makeText(getApplicationContext(), R.string.error_occured, Toast.LENGTH_SHORT).show();
+        }
 
         long duration = intent.getLongExtra("duration", 0);
         String formattedDuration = formatDuration(duration);
