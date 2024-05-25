@@ -48,6 +48,7 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
         editProfileButton.setOnClickListener(view -> startActivity(new Intent(getApplicationContext(), EditProfileActivity.class)));
+        trafficAlertsButton.setOnClickListener(view -> startActivity(new Intent(getApplicationContext(), TrafficAlertsActivity.class)));
     }
 
 }

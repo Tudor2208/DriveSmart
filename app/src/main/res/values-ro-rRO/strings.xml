@@ -89,17 +89,22 @@
     <string name="change_email_message">Introdu aici noua adresă de email</string>
     <string name="email_already_used">Această adresa de email este deja folosită</string>
     <string name="invalid_username">Numele de utilizator ar trebui să aibe maxim 10 caractere și niciun spațiu</string>
-    <string name="long_press_edit">Apasă lung pentru a edita numele de utilizator și pentru a schimba adresa de email</string>
+    <string name="long_press_edit">Ține apasat pentru a edita numele de utilizator și adresa de email</string>
     <string name="validate_email">Validează-ți adresa de email</string>
-    <string name="long_press_delete_journey">Apasă lung pentru a șterge o călătorie</string>
-    <string name="long_press_edit_journey_name">Apasă lung pentru a modifica numele unei călătorii</string>
+    <string name="long_press_delete_journey">Ține apasat pentru a șterge o călătorie</string>
+    <string name="long_press_edit_journey_name">Ține apasat pentru a modifica numele unei călătorii</string>
     <string name="changed_email_1">Validează-ți noua adresă de email</string>
     <string name="changed_email_2">Fără verificare, nu te vei mai putea autentifica!</string>
     <string name="change_password">Schimbă parola</string>
     <string name="change_password_message">Introdu aici noua parolă</string>
     <string name="current_password">Parola actuală</string>
-    <string name="current_password_message">Introdu aici parola actuala</string>
+    <string name="current_password_message">Introdu aici parola actuală</string>
     <string name="password_successfully_updated">Parola a fost actualizată cu succes</string>
     <string name="failed_password_update">Schimbarea parolei a eșuat</string>
     <string name="failed_reauthentication">Reautentificarea a eșuat</string>
+    <string name="long_press_change_sign_status">Ține apăsat pe un semn pentru a activa / dezactiva anunțul pentru el</string>
+    <string name="confirm_enable_sign">Ești sigur că vrei să activezi anunțul pentru acest semn?</string>
+    <string name="confirm_disable_sign">Ești sigur că vrei să dezactivezi anunțul pentru acest semn?</string>
+    <string name="enable">Activează</string>
+    <string name="disable">Dezactivează</string>
 </resources>

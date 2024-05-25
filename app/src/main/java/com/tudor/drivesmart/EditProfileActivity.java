@@ -33,16 +33,15 @@ public class EditProfileActivity extends AppCompatActivity {
 
     ListView editProfileListView;
     Button changePasswordButton;
-    private ArrayAdapter<String> adapter;
-    private final ArrayList<String> accountInfo = new ArrayList<>();
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
     FirebaseAuth auth;
     FirebaseUser user;
 
+    private ArrayAdapter<String> adapter;
+    private final ArrayList<String> accountInfo = new ArrayList<>();
     private static final String PASSWORD_PATTERN = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
     private static final Pattern pattern = Pattern.compile(PASSWORD_PATTERN);
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -191,18 +190,10 @@ public class EditProfileActivity extends AppCompatActivity {
                 if (currentPassword != null) {
                     AuthCredential credential = EmailAuthProvider.getCredential(Objects.requireNonNull(user.getEmail()), currentPassword);
                     user.reauthenticate(credential)
-                            .addOnSuccessListener(aVoid -> {
-                                user.updatePassword(newPassword)
-                                        .addOnSuccessListener(aVoid1 -> {
-                                            Toast.makeText(getApplicationContext(), R.string.password_successfully_updated, Toast.LENGTH_SHORT).show();
-                                        })
-                                        .addOnFailureListener(e -> {
-                                            Toast.makeText(getApplicationContext(), R.string.failed_password_update, Toast.LENGTH_SHORT).show();
-                                        });
-                            })
-                            .addOnFailureListener(e -> {
-                                Toast.makeText(getApplicationContext(), R.string.failed_reauthentication, Toast.LENGTH_SHORT).show();
-                            });
+                            .addOnSuccessListener(aVoid -> user.updatePassword(newPassword)
+                                    .addOnSuccessListener(aVoid1 -> Toast.makeText(getApplicationContext(), R.string.password_successfully_updated, Toast.LENGTH_SHORT).show())
+                                    .addOnFailureListener(e -> Toast.makeText(getApplicationContext(), R.string.failed_password_update, Toast.LENGTH_SHORT).show()))
+                            .addOnFailureListener(e -> Toast.makeText(getApplicationContext(), R.string.failed_reauthentication, Toast.LENGTH_SHORT).show());
                 }
             });
         } else {
@@ -222,9 +213,7 @@ public class EditProfileActivity extends AppCompatActivity {
                     String currentPassword = editTextField.getText().toString();
                     future.complete(currentPassword);
                 })
-                .setNegativeButton(R.string.cancel, (dialogInterface, i) -> {
-                    future.complete(null);
-                })
+                .setNegativeButton(R.string.cancel, (dialogInterface, i) -> future.complete(null))
                 .create();
 
         dialog.show();

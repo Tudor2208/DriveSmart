@@ -18,5 +18,3 @@ double_curve
 road_narrows
 road_narrows_left
 road_narrows_right
-
-

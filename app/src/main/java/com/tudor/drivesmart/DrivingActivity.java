@@ -8,6 +8,7 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -54,6 +55,7 @@ public class DrivingActivity extends AppCompatActivity {
     Button finishTripButton;
     DatabaseReference databaseReference;
     FirebaseUser user;
+    SharedPreferences sharedPreferences;
     private static final int CAMERA_REQUEST_CODE = 101;
     private static final long DELAY = 10000;
     private final HashMap<String, Long> lastPlayed = new HashMap<>();
@@ -63,6 +65,8 @@ public class DrivingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driving);
         checkAndRequestPermissions();
+
+        sharedPreferences = getSharedPreferences("saveData", Context.MODE_PRIVATE);
 
         HandlerThread videoThread = new HandlerThread("videoThread");
         videoThread.start();
@@ -169,7 +173,7 @@ public class DrivingActivity extends AppCompatActivity {
                         long currentTime = System.currentTimeMillis();
                         String labelName = recognition.getLabelName();
 
-                        if (!lastPlayed.containsKey(labelName) || currentTime - lastPlayed.get(labelName) > DELAY) {
+                        if ((!lastPlayed.containsKey(labelName) || currentTime - lastPlayed.get(labelName) > DELAY) && sharedPreferences.getBoolean(labelName, true)) {
                             soundManager.announceSign(recognition.getLabelName());
                             lastPlayed.put(labelName, currentTime);
                         }
