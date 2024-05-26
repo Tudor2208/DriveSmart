@@ -7,6 +7,20 @@
     tools:context=".SettingsActivity">
 
     <Button
+        android:id="@+id/change_language_button"
+        android:layout_width="270dp"
+        android:layout_height="47dp"
+        android:layout_marginTop="44dp"
+        android:backgroundTint="@color/btn_color"
+        android:fontFamily="@font/dm_sans"
+        android:text="@string/change_language"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/traffic_alerts_button" />
+
+    <Button
         android:id="@+id/traffic_alerts_button"
         android:backgroundTint="@color/btn_color"
         android:fontFamily="@font/dm_sans"
@@ -68,15 +82,15 @@
 
     <Button
         android:id="@+id/edit_profile_button"
-        android:backgroundTint="@color/btn_color"
-        android:fontFamily="@font/dm_sans"
-        android:textSize="20sp"
         android:layout_width="270dp"
         android:layout_height="47dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="28dp"
+        android:backgroundTint="@color/btn_color"
+        android:fontFamily="@font/dm_sans"
         android:text="@string/edit_profile"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView9" />
 
@@ -88,8 +102,8 @@
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.482"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/traffic_alerts_button"
-        app:layout_constraintVertical_bias="0.405" />
+        app:layout_constraintVertical_bias="1.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,16 +3,23 @@ package com.tudor.drivesmart;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.LocaleList;
+import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,6 +50,9 @@ public class MainActivity extends AppCompatActivity {
         } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
+
+        String lang = sharedPreferences.getString("app_lang", "en");
+        setLocale(this, lang);
 
         carImageView.setAnimation(carAnimation);
         carImageView.startAnimation(carAnimation);
@@ -83,5 +93,19 @@ public class MainActivity extends AppCompatActivity {
 
             }
         }.start();
+    }
+
+    private void setLocale(Context context, String languageCode) {
+        Locale locale = new Locale(languageCode);
+        Locale.setDefault(locale);
+
+        Resources resources = context.getResources();
+        Configuration config = resources.getConfiguration();
+
+        config.setLocale(locale);
+        LocaleList localeList = new LocaleList(locale);
+        LocaleList.setDefault(localeList);
+        config.setLocales(localeList);
+        context.createConfigurationContext(config);
     }
 }

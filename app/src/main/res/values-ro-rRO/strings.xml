@@ -134,4 +134,6 @@
     <string name="double_curve_sign">Curbă dublă</string>
     <string name="on">Pornit</string>
     <string name="off">Oprit</string>
+    <string name="change_language">Schimbă limba</string>
+    <string name="restart_app">Repornește aplicația pentru a aplica schimbarea</string>
 </resources>

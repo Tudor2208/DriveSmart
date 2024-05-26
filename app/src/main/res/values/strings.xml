@@ -135,4 +135,6 @@
     <string name="road_narrows_right_sign">Road narrows on right</string>
     <string name="on">ON</string>
     <string name="off">OFF</string>
+    <string name="change_language">Change language</string>
+    <string name="restart_app">Restart the app to apply the changes</string>
 </resources>
