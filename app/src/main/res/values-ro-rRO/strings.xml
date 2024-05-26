@@ -112,4 +112,26 @@
     <string name="date">Data</string>
     <string name="camera_permission_settings">Activează permisiunile camerei din setări</string>
     <string name="location_permission_settings">Activează permisiunile locației din setări</string>
+    <string name="pedestrian_crossing_sign">Trecere de pietoni</string>
+    <string name="pedestrian_crossing_warning_sign">Avertizare trecere de pietoni</string>
+    <string name="roundabout_sign">Sens giratoriu</string>
+    <string name="roundabout_warning_sign">Avertizare sens giratoriu</string>
+    <string name="priority_road_sign">Drum cu prioritate</string>
+    <string name="give_way_sign">Cedează trecerea</string>
+    <string name="speed_limit_50_sign">Limita de viteză 50 km/h</string>
+    <string name="speed_limit_60_sign">Limita de viteză 60 km/h</string>
+    <string name="speed_limit_70_sign">Limita de viteză 70 km/h</string>
+    <string name="speed_limit_80_sign">Limita de viteză 80 km/h</string>
+    <string name="speed_limit_90_sign">Limita de viteză 90 km/h</string>
+    <string name="dangerous_curve_left_sign">Curbă periculoasă la stânga</string>
+    <string name="dangerous_curve_right_sign">Curbă periculoasă la dreapta</string>
+    <string name="left_bend_sign">Curbă la stânga</string>
+    <string name="right_bend_sign">Curbă la dreapta</string>
+    <string name="road_narrows_sign">Îngustare drum</string>
+    <string name="road_narrows_left_sign">Îngustare drum pe stânga</string>
+    <string name="road_narrows_right_sign">Îngustare drum pe dreapta</string>
+    <string name="stop_sign">Stop</string>
+    <string name="double_curve_sign">Curbă dublă</string>
+    <string name="on">Pornit</string>
+    <string name="off">Oprit</string>
 </resources>

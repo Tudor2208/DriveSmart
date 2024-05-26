@@ -42,8 +42,8 @@
     <string name="speed_limit_90">The speed limit is 90 kilometers per hour</string>
     <string name="dangerous_curve_left">Dangerous curve to the left</string>
     <string name="dangerous_curve_right">Dangerous curve to the right</string>
-    <string name="right_bend">Bend to the right</string>
-    <string name="left_bend">Bend to the left\n</string>
+    <string name="right_bend">Road bends to the right</string>
+    <string name="left_bend">Road bends to the left\n</string>
     <string name="double_curve">Double curve ahead</string>
     <string name="road_narrows">Road narrows ahead</string>
     <string name="road_narrows_left">Road narrows on the left side</string>
@@ -112,4 +112,27 @@
     <string name="date">Date</string>
     <string name="camera_permission_settings">Enable camera permissions from the settings menu</string>
     <string name="location_permission_settings">Enable location permissions from the settings menu</string>
+
+    <string name="pedestrian_crossing_sign">Pedestrian crossing</string>
+    <string name="pedestrian_crossing_warning_sign">Pedestrian crossing warning</string>
+    <string name="roundabout_sign">Roundabout</string>
+    <string name="roundabout_warning_sign">Roundabout warning</string>
+    <string name="priority_road_sign">Priority road</string>
+    <string name="stop_sign">Stop</string>
+    <string name="give_way_sign">Give way</string>
+    <string name="speed_limit_50_sign">Speed limit 50 km/h</string>
+    <string name="speed_limit_60_sign">Speed limit 60 km/h</string>
+    <string name="speed_limit_70_sign">Speed limit 70 km/h</string>
+    <string name="speed_limit_80_sign">Speed limit 80 km/h</string>
+    <string name="speed_limit_90_sign">Speed limit 90 km/h</string>
+    <string name="double_curve_sign">Double curve</string>
+    <string name="dangerous_curve_left_sign">Dangerous curve left</string>
+    <string name="dangerous_curve_right_sign">Dangerous curve right</string>
+    <string name="left_bend_sign">Road bends to left</string>
+    <string name="right_bend_sign">Road bends to right</string>
+    <string name="road_narrows_sign">Road narrows</string>
+    <string name="road_narrows_left_sign">Road narrows on left</string>
+    <string name="road_narrows_right_sign">Road narrows on right</string>
+    <string name="on">ON</string>
+    <string name="off">OFF</string>
 </resources>

@@ -47,7 +47,8 @@ public class TrafficAlertsActivity extends AppCompatActivity {
         labels = getLabelsFromAssets();
         labels.forEach(label -> {
             boolean toBeAnnounced = sharedPreferences.getBoolean(label, true);
-            String formattedString = !toBeAnnounced ? String.format("%s: OFF", label) : String.format("%s: ON", label);
+            @SuppressLint("DiscouragedApi") int stringId = getResources().getIdentifier(label + "_sign", "string", getPackageName());
+            String formattedString = !toBeAnnounced ? String.format("%s: %s", getString(stringId), getString(R.string.off)) : String.format("%s: %s", getString(stringId), getString(R.string.on));
             trafficSigns.add(formattedString);
         });
 
@@ -95,8 +96,9 @@ public class TrafficAlertsActivity extends AppCompatActivity {
 
     private void changeSignStatus(int i, boolean toBeAnnounced) {
         String label = labels.get(i);
+        @SuppressLint("DiscouragedApi") int stringId = getResources().getIdentifier(label + "_sign", "string", getPackageName());
 
-        String formattedString = !toBeAnnounced ? String.format("%s: OFF", label) : String.format("%s: ON", label);
+        String formattedString = !toBeAnnounced ? String.format("%s: %s", getString(stringId), getString(R.string.off)) : String.format("%s: %s", getString(stringId), getString(R.string.on));
         trafficSigns.set(i, formattedString);
         adapter.notifyDataSetChanged();
 
