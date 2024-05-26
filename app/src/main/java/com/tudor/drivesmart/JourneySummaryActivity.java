@@ -9,6 +9,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -28,6 +29,7 @@ public class JourneySummaryActivity extends AppCompatActivity {
 
     TextView summaryTitleTextView;
     ListView summaryListView;
+    Button viewOnGoogleMapsButton;
     private final ArrayList<String> infoList = new ArrayList<>();
     private ArrayAdapter<String> adapter;
 
@@ -65,6 +67,12 @@ public class JourneySummaryActivity extends AppCompatActivity {
         String startCountry = getCountryFromLocation(startLat, startLong);
         String endCountry = getCountryFromLocation(endLat, endLong);
 
+        Intent mapIntent = new Intent(getApplicationContext(), MapsActivity.class);
+        mapIntent.putExtra("startLat", startLat);
+        mapIntent.putExtra("startLong", startLong);
+        mapIntent.putExtra("endLat", endLat);
+        mapIntent.putExtra("endLong", endLong);
+
         String startTime = intent.getStringExtra("startTime");
         infoList.add(String.format("%s: %s, %s\n%s: %s", getString(R.string.start), startLocality, startCountry, getString(R.string.date), startTime));
 
@@ -82,6 +90,9 @@ public class JourneySummaryActivity extends AppCompatActivity {
             }
             return true;
         });
+
+        viewOnGoogleMapsButton = findViewById(R.id.view_on_maps_button);
+        viewOnGoogleMapsButton.setOnClickListener(view -> startActivity(mapIntent));
 
         Toast.makeText(getApplicationContext(), R.string.long_press_edit_journey_name, Toast.LENGTH_SHORT).show();
     }
