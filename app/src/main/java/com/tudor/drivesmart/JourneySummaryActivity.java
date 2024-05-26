@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -54,29 +53,23 @@ public class JourneySummaryActivity extends AppCompatActivity {
 
         infoList.add(String.format("%s: %s", getString(R.string.name), name));
 
-        Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
         double startLat = intent.getDoubleExtra("startLat", 0);
         double endLat = intent.getDoubleExtra("endLat", 0);
 
         double startLong = intent.getDoubleExtra("startLong", 0);
         double endLong = intent.getDoubleExtra("endLong", 0);
 
-        try {
-            Address startAddress = geocoder.getFromLocation(startLat, startLong, 1).get(0);
-            Address endAddress = geocoder.getFromLocation(endLat, endLong, 1).get(0);
+        String startLocality = getLocalityFromLocation(startLat, startLong);
+        String endLocality = getLocalityFromLocation(endLat, endLong);
 
-            String startLocality = startAddress.getLocality();
-            String endLocality = endAddress.getLocality();
+        String startCountry = getCountryFromLocation(startLat, startLong);
+        String endCountry = getCountryFromLocation(endLat, endLong);
 
-            String startTime = intent.getStringExtra("startTime");
-            infoList.add(String.format("%s: %s\n%s: %s", getString(R.string.start), startLocality, getString(R.string.date), startTime));
+        String startTime = intent.getStringExtra("startTime");
+        infoList.add(String.format("%s: %s, %s\n%s: %s", getString(R.string.start), startLocality, startCountry, getString(R.string.date), startTime));
 
-            String endTime = intent.getStringExtra("endTime");
-            infoList.add(String.format("%s: %s\n%s: %s", getString(R.string.end), endLocality, getString(R.string.date), endTime));
-
-        } catch (IOException e) {
-            Toast.makeText(getApplicationContext(), R.string.error_occured, Toast.LENGTH_SHORT).show();
-        }
+        String endTime = intent.getStringExtra("endTime");
+        infoList.add(String.format("%s: %s, %s\n%s: %s", getString(R.string.end), endLocality, endCountry, getString(R.string.date), endTime));
 
         long duration = intent.getLongExtra("duration", 0);
         String formattedDuration = formatDuration(duration);
@@ -91,6 +84,26 @@ public class JourneySummaryActivity extends AppCompatActivity {
         });
 
         Toast.makeText(getApplicationContext(), R.string.long_press_edit_journey_name, Toast.LENGTH_SHORT).show();
+    }
+
+    private String getLocalityFromLocation(double latitude, double longitude) {
+        Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
+        try {
+            Address address = geocoder.getFromLocation(latitude, longitude, 1).get(0);
+            return address.getLocality();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private String getCountryFromLocation(double latitude, double longitude) {
+        Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
+        try {
+            Address address = geocoder.getFromLocation(latitude, longitude, 1).get(0);
+            return address.getCountryName();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void showEditJourneyNameDialog() {

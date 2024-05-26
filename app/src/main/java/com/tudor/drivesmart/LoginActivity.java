@@ -84,7 +84,7 @@ public class LoginActivity extends AppCompatActivity {
                             if (verificationTask.isSuccessful()) {
                                 Toast.makeText(getApplicationContext(), R.string.verify_email_first, Toast.LENGTH_SHORT).show();
                             } else {
-                                Toast.makeText(getApplicationContext(), R.string.error_occured, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), R.string.error_occurred, Toast.LENGTH_SHORT).show();
                             }
                         });
 

@@ -38,7 +38,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                         startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                         finish();
                     } else {
-                        Toast.makeText(getApplicationContext(), R.string.error_occured, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), R.string.error_occurred, Toast.LENGTH_SHORT).show();
                     }
                 });
             }

@@ -75,15 +75,14 @@ public class TrafficAlertsActivity extends AppCompatActivity {
 
         TextView dialogText = dialogView.findViewById(R.id.dialog_text);
 
-        String signName = label.replace("_", " ");
         String title;
 
         if (toBeAnnounced) {
             dialogText.setText(R.string.confirm_enable_sign);
-            title = String.format("%s \"%s\"", getString(R.string.enable), signName);
+            title = getString(R.string.enable);
         } else {
             dialogText.setText(R.string.confirm_disable_sign);
-            title = String.format("%s \"%s\"", getString(R.string.disable), signName);
+            title = getString(R.string.disable);
         }
 
         builder.setTitle(title);
@@ -118,7 +117,7 @@ public class TrafficAlertsActivity extends AppCompatActivity {
                 labels.add(line);
             }
         } catch (IOException ex) {
-            Toast.makeText(getApplicationContext(), R.string.error_occured, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.error_occurred, Toast.LENGTH_SHORT).show();
         }
         return labels;
     }

@@ -7,6 +7,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.InputType;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -151,14 +152,14 @@ public class EditProfileActivity extends AppCompatActivity {
                                     Toast.makeText(getApplicationContext(), R.string.changed_email_1, Toast.LENGTH_LONG).show();
                                     Toast.makeText(getApplicationContext(), R.string.changed_email_2, Toast.LENGTH_LONG).show();
                                 } else {
-                                    Toast.makeText(getApplicationContext(), R.string.error_occured, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(), R.string.error_occurred, Toast.LENGTH_SHORT).show();
                                 }
                             });
                         } else {
                             if (task.getException() instanceof FirebaseAuthUserCollisionException) {
                                 Toast.makeText(getApplicationContext(), R.string.email_already_used, Toast.LENGTH_SHORT).show();
                             } else {
-                                Toast.makeText(getApplicationContext(), R.string.error_occured, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), R.string.error_occurred, Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
@@ -170,6 +171,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
     private void showChangePasswordDialog() {
         EditText editTextField = new EditText(this);
+        editTextField.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(R.string.change_password)
                 .setMessage(R.string.change_password_message)
@@ -205,6 +207,7 @@ public class EditProfileActivity extends AppCompatActivity {
         CompletableFuture<String> future = new CompletableFuture<>();
 
         EditText editTextField = new EditText(this);
+        editTextField.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(R.string.current_password)
                 .setMessage(R.string.current_password_message)

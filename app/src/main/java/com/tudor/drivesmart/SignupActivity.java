@@ -96,7 +96,7 @@ public class SignupActivity extends AppCompatActivity {
                             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                             finish();
                         } else {
-                            Toast.makeText(getApplicationContext(), R.string.error_occured, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), R.string.error_occurred, Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -104,7 +104,7 @@ public class SignupActivity extends AppCompatActivity {
                 if (task.getException() instanceof FirebaseAuthUserCollisionException) {
                     Toast.makeText(getApplicationContext(), R.string.email_already_used, Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(getApplicationContext(), R.string.error_occured, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), R.string.error_occurred, Toast.LENGTH_SHORT).show();
                 }
             }
         });

@@ -56,7 +56,7 @@
     <TextView
         android:id="@+id/textView16"
         android:layout_width="288dp"
-        android:layout_height="84dp"
+        android:layout_height="61dp"
         android:layout_marginTop="28dp"
         android:text="@string/long_press_change_sign_status"
         android:textAlignment="center"
@@ -67,8 +67,8 @@
 
     <ListView
         android:id="@+id/traffic_signs_list_view"
-        android:layout_width="365dp"
-        android:layout_height="195dp"
+        android:layout_width="368dp"
+        android:layout_height="222dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"

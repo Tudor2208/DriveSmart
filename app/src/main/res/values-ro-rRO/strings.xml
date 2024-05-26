@@ -72,7 +72,7 @@
     <string name="edit_journey_name_message">Introdu aici un nume nou pentru această călătorie</string>
     <string name="password_rules">Parola trebuie să conțină cel puțin 8 caractere, cel puțin o cifră, cel puțin o literă mare, cel puțin o literă mică și cel puțin un caracter special</string>
     <string name="weak_password">Parolă slabă</string>
-    <string name="error_occured">A apărut o eroare</string>
+    <string name="error_occurred">A apărut o eroare</string>
     <string name="login">Autentificare</string>
     <string name="signup">Înregistrare</string>
     <string name="verify_email_first">Trebuie să îți validezi adresa de email prima dată</string>
@@ -89,10 +89,10 @@
     <string name="change_email_message">Introdu aici noua adresă de email</string>
     <string name="email_already_used">Această adresa de email este deja folosită</string>
     <string name="invalid_username">Numele de utilizator ar trebui să aibe maxim 10 caractere și niciun spațiu</string>
-    <string name="long_press_edit">Ține apasat pentru a edita numele de utilizator și adresa de email</string>
+    <string name="long_press_edit">Ține apăsat pentru a edita numele de utilizator și adresa de email</string>
     <string name="validate_email">Validează-ți adresa de email</string>
     <string name="long_press_delete_journey">Ține apasat pentru a șterge o călătorie</string>
-    <string name="long_press_edit_journey_name">Ține apasat pentru a modifica numele unei călătorii</string>
+    <string name="long_press_edit_journey_name">Ține apăsat pentru a modifica numele unei călătorii</string>
     <string name="changed_email_1">Validează-ți noua adresă de email</string>
     <string name="changed_email_2">Fără verificare, nu te vei mai putea autentifica!</string>
     <string name="change_password">Schimbă parola</string>
@@ -102,12 +102,14 @@
     <string name="password_successfully_updated">Parola a fost actualizată cu succes</string>
     <string name="failed_password_update">Schimbarea parolei a eșuat</string>
     <string name="failed_reauthentication">Reautentificarea a eșuat</string>
-    <string name="long_press_change_sign_status">Ține apăsat pe un semn pentru a activa / dezactiva anunțul pentru el</string>
-    <string name="confirm_enable_sign">Ești sigur că vrei să activezi anunțul pentru acest semn?</string>
-    <string name="confirm_disable_sign">Ești sigur că vrei să dezactivezi anunțul pentru acest semn?</string>
-    <string name="enable">Activează</string>
-    <string name="disable">Dezactivează</string>
+    <string name="long_press_change_sign_status">Ține apăsat pentru a activa / dezactiva alerta</string>
+    <string name="confirm_enable_sign">Ești sigur că vrei să activezi alerta pentru acest semn de circulatie?</string>
+    <string name="confirm_disable_sign">Ești sigur că vrei să dezactivezi alerta pentru acest semn de circulatie?</string>
+    <string name="enable">Activează alerta</string>
+    <string name="disable">Dezactivează alerta</string>
     <string name="camera_permission_denied">Permisiune refuzată pentru cameră</string>
     <string name="gps_permission_denied">Permisiune refuzată pentru GPS</string>
     <string name="date">Data</string>
+    <string name="camera_permission_settings">Activează permisiunile camerei din setări</string>
+    <string name="location_permission_settings">Activează permisiunile locației din setări</string>
 </resources>

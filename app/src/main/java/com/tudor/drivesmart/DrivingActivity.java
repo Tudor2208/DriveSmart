@@ -24,11 +24,11 @@ import android.hardware.camera2.CameraDevice;
 import android.hardware.camera2.CameraManager;
 import android.hardware.camera2.CaptureRequest;
 import android.location.Location;
-import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.os.Looper;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Surface;
 import android.view.TextureView;
@@ -36,6 +36,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -44,6 +46,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class DrivingActivity extends AppCompatActivity {
 
@@ -61,12 +64,10 @@ public class DrivingActivity extends AppCompatActivity {
     DatabaseReference databaseReference;
     FirebaseUser user;
     SharedPreferences sharedPreferences;
-    Location start, end;
-    private Handler locationHandler;
-    private Runnable locationRunnable;
+    Location startLocation;
+    FusedLocationProviderClient fusedLocationProviderClient;
     private static final int CAMERA_REQUEST_CODE = 101;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 102;
-    private LocationManager locationManager;
     private static final long DELAY = 10000;
     private final HashMap<String, Long> lastPlayed = new HashMap<>();
 
@@ -77,7 +78,7 @@ public class DrivingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_driving);
         checkAndRequestPermissions();
 
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         sharedPreferences = getSharedPreferences("saveData", Context.MODE_PRIVATE);
 
@@ -108,55 +109,72 @@ public class DrivingActivity extends AppCompatActivity {
         user = FirebaseAuth.getInstance().getCurrentUser();
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
-        finishTripButton.setOnClickListener(view -> showConfirmFinishTripDialog());
+        finishTripButton.setOnClickListener(view -> showConfirmFinishJourneyDialog());
 
         setupTextureView();
     }
 
-    private void finishTrip() {
+    @SuppressLint("MissingPermission")
+    private void finishJourney() {
         Intent intent = getIntent();
 
         long startDrivingTime = intent.getLongExtra("startDrivingTime", 0);
         long endDrivingTime = System.currentTimeMillis();
         long duration = endDrivingTime - startDrivingTime;
 
-        if (user != null) {
-            DatabaseReference userTrips = databaseReference.child("Users").child(user.getUid()).child("Trips");
-            DatabaseReference newTrip = userTrips.push();
-            newTrip.child("startTime").setValue(startDrivingTime);
-            newTrip.child("endTime").setValue(endDrivingTime);
-            newTrip.child("duration").setValue(duration);
-            newTrip.child("startLat").setValue(start.getLatitude());
-            newTrip.child("startLong").setValue(start.getLongitude());
-            newTrip.child("endLat").setValue(end.getLatitude());
-            newTrip.child("endLong").setValue(end.getLongitude());
+        CompletableFuture<Location> currentLocationFuture = getCurrentLocation();
+        currentLocationFuture.thenAccept(endLocation -> {
+            if (user != null) {
+                DatabaseReference userTrips = databaseReference.child("Users").child(user.getUid()).child("Trips");
+                DatabaseReference newTrip = userTrips.push();
+                newTrip.child("startTime").setValue(startDrivingTime);
+                newTrip.child("endTime").setValue(endDrivingTime);
+                newTrip.child("duration").setValue(duration);
+                newTrip.child("startLat").setValue(startLocation.getLatitude());
+                newTrip.child("startLong").setValue(startLocation.getLongitude());
+                newTrip.child("endLat").setValue(endLocation.getLatitude());
+                newTrip.child("endLong").setValue(endLocation.getLongitude());
+            }
 
-        }
-
-        startActivity(new Intent(getApplicationContext(), MenuActivity.class));
-        finish();
+            startActivity(new Intent(getApplicationContext(), MenuActivity.class));
+            finish();
+        }).exceptionally(e -> {
+            Log.e("finishJourney", "Failed to get last location", e);
+            startActivity(new Intent(getApplicationContext(), MenuActivity.class));
+            Toast.makeText(getApplicationContext(), R.string.error_occurred, Toast.LENGTH_SHORT).show();
+            finish();
+            return null;
+        });
     }
 
-    private void showConfirmFinishTripDialog() {
+    @SuppressLint("MissingPermission")
+    private CompletableFuture<Location> getCurrentLocation() {
+        CompletableFuture<Location> future = new CompletableFuture<>();
+
+        fusedLocationProviderClient.getLastLocation()
+                .addOnSuccessListener(future::complete)
+                .addOnFailureListener(future::completeExceptionally);
+
+        return future;
+    }
+
+    private void showConfirmFinishJourneyDialog() {
         new AlertDialog.Builder(this)
                 .setTitle(R.string.confirm_exit)
                 .setMessage(R.string.finish_trip_confirm)
-                .setPositiveButton(R.string.yes, (dialog, which) -> finishTrip())
+                .setPositiveButton(R.string.yes, (dialog, which) -> finishJourney())
                 .setNegativeButton(R.string.no, (dialogInterface, i) -> dialogInterface.cancel())
                 .show();
     }
 
     @Override
     public void onBackPressed() {
-        showConfirmFinishTripDialog();
+        showConfirmFinishJourneyDialog();
     }
 
     @Override
     protected void onDestroy() {
         soundManager.shutdown();
-        if (locationHandler != null && locationRunnable != null) {
-            locationHandler.removeCallbacks(locationRunnable);
-        }
         super.onDestroy();
     }
 
@@ -165,7 +183,9 @@ public class DrivingActivity extends AppCompatActivity {
             @Override
             public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surfaceTexture, int width, int height) {
                 openCamera();
-                startGettingCoordinates();
+
+                CompletableFuture<Location> currentLocation = getCurrentLocation();
+                currentLocation.thenAccept(location -> startLocation = location);
             }
 
             @Override
@@ -224,35 +244,26 @@ public class DrivingActivity extends AppCompatActivity {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 openCamera();
             } else {
-                Toast.makeText(this, R.string.camera_permission_denied, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.camera_permission_settings, Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                Uri uri = Uri.fromParts("package", getPackageName(), null);
+                intent.setData(uri);
+                startActivity(intent);
             }
         }
 
         if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                startGettingCoordinates();
+                CompletableFuture<Location> currentLocation = getCurrentLocation();
+                currentLocation.thenAccept(location -> startLocation = location);
             } else {
-                Toast.makeText(this, R.string.gps_permission_denied, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.location_permission_settings, Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                Uri uri = Uri.fromParts("package", getPackageName(), null);
+                intent.setData(uri);
+                startActivity(intent);
             }
         }
-    }
-
-    @SuppressLint("MissingPermission")
-    private void startGettingCoordinates() {
-        locationHandler = new Handler(Looper.getMainLooper());
-        locationRunnable = new Runnable() {
-            @Override
-            public void run() {
-                Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                if (start == null) {
-                    start = location;
-                }
-                end = location;
-                locationHandler.postDelayed(this, 5000);
-            }
-        };
-
-        locationHandler.post(locationRunnable);
     }
 
     private void openCamera() {
