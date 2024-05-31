@@ -38,6 +38,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.Priority;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -151,8 +152,14 @@ public class DrivingActivity extends AppCompatActivity {
     private CompletableFuture<Location> getCurrentLocation() {
         CompletableFuture<Location> future = new CompletableFuture<>();
 
-        fusedLocationProviderClient.getLastLocation()
-                .addOnSuccessListener(future::complete)
+        fusedLocationProviderClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
+                .addOnSuccessListener(location -> {
+                    if (location != null) {
+                        future.complete(location);
+                    } else {
+                        future.completeExceptionally(new Exception("Location is null"));
+                    }
+                })
                 .addOnFailureListener(future::completeExceptionally);
 
         return future;

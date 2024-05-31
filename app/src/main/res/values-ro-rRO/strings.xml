@@ -136,4 +136,6 @@
     <string name="off">Oprit</string>
     <string name="change_language">Schimbă limba</string>
     <string name="restart_app">Repornește aplicația pentru a aplica schimbarea</string>
+    <string name="english">Engleză</string>
+    <string name="romanian">Română</string>
 </resources>

@@ -3,23 +3,16 @@ package com.tudor.drivesmart;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.LocaleList;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
-import java.util.Locale;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -64,12 +57,20 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void showChangeLanguageDialog() {
-        String[] languages = {"en", "ro"};
+        String[] languages = {getString(R.string.english), getString(R.string.romanian)};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getString(R.string.change_language));
         builder.setItems(languages, (dialog, which) -> {
-            String selectedLanguage = languages[which];
+            String selectedLanguage = "en";
+            switch (which) {
+                case 0:
+                    selectedLanguage = "en";
+                    break;
+                case 1:
+                    selectedLanguage = "ro";
+                    break;
+            }
             editor.putString("app_lang", selectedLanguage);
             editor.apply();
             Toast.makeText(getApplicationContext(), R.string.restart_app, Toast.LENGTH_SHORT).show();

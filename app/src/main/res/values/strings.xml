@@ -138,5 +138,7 @@
     <string name="change_language">Change language</string>
     <string name="restart_app">Restart the app to apply the changes</string>
     <string name="title_activity_maps">MapsActivity</string>
-    <string name="view_google_maps">View on Google Maps</string>
+    <string name="view_google_maps" translatable="false">View on Google Maps</string>
+    <string name="english">English</string>
+    <string name="romanian">Romanian</string>
 </resources>
