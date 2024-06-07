@@ -137,8 +137,11 @@
     <string name="off">OFF</string>
     <string name="change_language">Change language</string>
     <string name="restart_app">Restart the app to apply the changes</string>
-    <string name="title_activity_maps">MapsActivity</string>
+    <string name="title_activity_maps" translatable="false">MapsActivity</string>
     <string name="view_google_maps" translatable="false">View on Google Maps</string>
     <string name="english">English</string>
     <string name="romanian">Romanian</string>
+    <string name="detect_traffic_signs">Detect traffic signs</string>
+    <string name="make_turn_prediction">Make turn prediction</string>
+    <string name="select_model">Choose the mode</string>
 </resources>

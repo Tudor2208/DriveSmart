@@ -30,10 +30,12 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.provider.Settings;
 import android.util.Log;
+import android.util.Pair;
 import android.view.Surface;
 import android.view.TextureView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -52,6 +54,7 @@ import java.util.concurrent.CompletableFuture;
 public class DrivingActivity extends AppCompatActivity {
 
     TextureView textureView;
+    TextView classTextView;
     CameraManager cameraManager;
     CameraDevice cameraDevice;
     Handler handler;
@@ -59,8 +62,7 @@ public class DrivingActivity extends AppCompatActivity {
     Bitmap bitmap;
     Yolov5TFLiteDetector detector;
     TrafficSignSoundManager soundManager;
-    Paint boxPaint = new Paint();
-    Paint textPaint = new Paint();
+    Paint boxPaint = new Paint(), textPaint = new Paint();
     Button finishTripButton;
     DatabaseReference databaseReference;
     FirebaseUser user;
@@ -71,6 +73,8 @@ public class DrivingActivity extends AppCompatActivity {
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 102;
     private static final long DELAY = 10000;
     private final HashMap<String, Long> lastPlayed = new HashMap<>();
+    private TurnPredictionModel turnPredictionModelResnet;
+    private String modelType;
 
     @SuppressLint("MissingPermission")
     @Override
@@ -89,11 +93,17 @@ public class DrivingActivity extends AppCompatActivity {
 
         cameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
         textureView = findViewById(R.id.textureView);
+        classTextView = findViewById(R.id.class_text_view);
         imageView = findViewById(R.id.imageView);
 
         detector = new Yolov5TFLiteDetector();
         detector.setModelFile("best-fp16.tflite");
         detector.initialModel(this);
+
+        turnPredictionModelResnet = new TurnPredictionModel(this, "turn_prediction_resnet.tflite");
+
+        Intent intent = getIntent();
+        modelType = intent.getStringExtra("model");
 
         textPaint.setColor(Color.RED);
         textPaint.setTextSize(40);
@@ -208,30 +218,58 @@ public class DrivingActivity extends AppCompatActivity {
             @Override
             public void onSurfaceTextureUpdated(@NonNull SurfaceTexture surfaceTexture) {
                 bitmap = textureView.getBitmap();
-                ArrayList<Recognition> recognitions = detector.detect(bitmap);
-                Bitmap mutableBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
-                Canvas canvas = new Canvas(mutableBitmap);
 
-                for(Recognition recognition: recognitions) {
-                    if(recognition.getConfidence() > 0.5) {
-
-                        RectF location = recognition.getLocation();
-                        canvas.drawRect(location, boxPaint);
-                        canvas.drawText(recognition.getLabelName(), location.left, location.top, textPaint);
-
-                        long currentTime = System.currentTimeMillis();
-                        String labelName = recognition.getLabelName();
-
-                        if ((!lastPlayed.containsKey(labelName) || currentTime - lastPlayed.get(labelName) > DELAY) && sharedPreferences.getBoolean(labelName, true)) {
-                            soundManager.announceSign(recognition.getLabelName());
-                            lastPlayed.put(labelName, currentTime);
-                        }
-                    }
+                switch(modelType) {
+                    case "0":
+                        detectTrafficSigns();
+                        break;
+                    case "1":
+                        makeTurnPrediction();
+                        break;
                 }
-                imageView.setImageBitmap(mutableBitmap);
             }
         });
     }
+
+    @SuppressLint("DefaultLocale")
+    private void makeTurnPrediction() {
+        float[][][][] input = ImageUtils.preprocessImage(bitmap);
+        Pair<String, Float> predictionResnet = turnPredictionModelResnet.predict(input);
+
+        String predictedClassResnet = predictionResnet.first;
+        float confidenceResnet = predictionResnet.second;
+
+        classTextView.setText(String.format("%s (%.2f%%)", predictedClassResnet, confidenceResnet * 100));
+        imageView.setImageBitmap(bitmap);
+    }
+
+    @SuppressLint("DiscouragedApi")
+    private void detectTrafficSigns() {
+        ArrayList<Recognition> recognitions = detector.detect(bitmap);
+        Bitmap mutableBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
+        Canvas canvas = new Canvas(mutableBitmap);
+
+        for(Recognition recognition: recognitions) {
+            if(recognition.getConfidence() > 0.5) {
+
+                @SuppressLint("DiscouragedApi") int resourceId = getResources().getIdentifier(recognition.getLabelName() + "_sign", "string", getPackageName());
+                RectF location = recognition.getLocation();
+                canvas.drawRect(location, boxPaint);
+                canvas.drawText(getString(resourceId), location.left, location.top, textPaint);
+
+                long currentTime = System.currentTimeMillis();
+                String labelName = recognition.getLabelName();
+
+                if ((!lastPlayed.containsKey(labelName) || currentTime - lastPlayed.get(labelName) > DELAY) && sharedPreferences.getBoolean(labelName, true)) {
+                    resourceId = getResources().getIdentifier(recognition.getLabelName(), "string", getPackageName());
+                    soundManager.announce(getString(resourceId));
+                    lastPlayed.put(labelName, currentTime);
+                }
+            }
+        }
+        imageView.setImageBitmap(mutableBitmap);
+    }
+
 
     private void checkAndRequestPermissions() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {

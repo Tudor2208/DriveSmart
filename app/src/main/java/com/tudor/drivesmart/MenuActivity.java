@@ -23,6 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 
 public class MenuActivity extends AppCompatActivity {
 
@@ -65,12 +66,32 @@ public class MenuActivity extends AppCompatActivity {
         settingsButton.setOnClickListener(view -> startActivity(new Intent(getApplicationContext(), SettingsActivity.class)));
     }
 
+    private CompletableFuture<String> getModel() {
+        String[] models = {getString(R.string.detect_traffic_signs), getString(R.string.make_turn_prediction)};
+        CompletableFuture<String> future = new CompletableFuture<>();
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.select_model);
+        builder.setItems(models, (dialog, which) -> {
+            future.complete(String.valueOf(which));
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+        return future;
+    }
+
     private void startDriving() {
         Intent intent = new Intent(getApplicationContext(), DrivingActivity.class);
         long currentTime = System.currentTimeMillis();
         intent.putExtra("startDrivingTime", currentTime);
 
-        startActivity(intent);
+        CompletableFuture<String> modelFuture = getModel();
+        modelFuture.thenAccept(model -> {
+            intent.putExtra("model", model);
+            startActivity(intent);
+        });
     }
 
     private void showStartDrivingDialog() {

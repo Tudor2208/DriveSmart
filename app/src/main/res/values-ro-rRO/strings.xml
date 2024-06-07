@@ -138,4 +138,7 @@
     <string name="restart_app">Repornește aplicația pentru a aplica schimbarea</string>
     <string name="english">Engleză</string>
     <string name="romanian">Română</string>
+    <string name="detect_traffic_signs">Detectare semne de circulație</string>
+    <string name="make_turn_prediction">Prezicere viraje</string>
+    <string name="select_model">Selectează modul dorit</string>
 </resources>
