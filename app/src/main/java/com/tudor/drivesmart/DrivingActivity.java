@@ -97,10 +97,10 @@ public class DrivingActivity extends AppCompatActivity {
         imageView = findViewById(R.id.imageView);
 
         detector = new Yolov5TFLiteDetector();
-        detector.setModelFile("best-fp16.tflite");
+        detector.setModelFile("yolo.tflite");
         detector.initialModel(this);
 
-        turnPredictionModelResnet = new TurnPredictionModel(this, "turn_prediction_resnet.tflite");
+        turnPredictionModelResnet = new TurnPredictionModel(this, "turn_prediction_cnn.tflite");
 
         Intent intent = getIntent();
         modelType = intent.getStringExtra("model");
@@ -237,9 +237,15 @@ public class DrivingActivity extends AppCompatActivity {
         Pair<String, Float> predictionResnet = turnPredictionModelResnet.predict(input);
 
         String predictedClassResnet = predictionResnet.first;
-        float confidenceResnet = predictionResnet.second;
 
-        classTextView.setText(String.format("%s (%.2f%%)", predictedClassResnet, confidenceResnet * 100));
+        if (predictedClassResnet.equals("LEFT")) {
+            classTextView.setText(getString(R.string.left));
+        } else if (predictedClassResnet.equals("RIGHT")) {
+            classTextView.setText(getString(R.string.right));
+        } else {
+            classTextView.setText(getString(R.string.straight));
+        }
+
         imageView.setImageBitmap(bitmap);
     }
 

@@ -26,7 +26,7 @@ import java.util.PriorityQueue;
 public class Yolov5TFLiteDetector {
 
     private static final Size INPUT_SIZE = new Size(640, 640);
-    private final int[] OUTPUT_SIZE = new int[]{1, 25200, 25};
+    private final int[] OUTPUT_SIZE = new int[]{1, 25200, 26};
     private static final float DETECT_THRESHOLD = 0.25f;
     private String MODEL_FILE;
     private Interpreter tflite;

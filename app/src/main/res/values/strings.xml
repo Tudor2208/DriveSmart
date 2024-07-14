@@ -35,6 +35,7 @@
     <string name="priority_road">You are on a priority road</string>
     <string name="roundabout">Roundabout</string>
     <string name="roundabout_warning">Attention! Roundabout ahead</string>
+    <string name="speed_limit_30">The speed limit is 30 kilometers per hour</string>
     <string name="speed_limit_50">The speed limit is 50 kilometers per hour</string>
     <string name="speed_limit_60">The speed limit is 60 kilometers per hour</string>
     <string name="speed_limit_70">The speed limit is 70 kilometers per hour</string>
@@ -120,6 +121,7 @@
     <string name="priority_road_sign">Priority road</string>
     <string name="stop_sign">Stop</string>
     <string name="give_way_sign">Give way</string>
+    <string name="speed_limit_30_sign">Speed limit 30 km/h</string>
     <string name="speed_limit_50_sign">Speed limit 50 km/h</string>
     <string name="speed_limit_60_sign">Speed limit 60 km/h</string>
     <string name="speed_limit_70_sign">Speed limit 70 km/h</string>
@@ -144,4 +146,7 @@
     <string name="detect_traffic_signs">Detect traffic signs</string>
     <string name="make_turn_prediction">Make turn prediction</string>
     <string name="select_model">Choose the mode</string>
+    <string name="left">LEFT</string>
+    <string name="right">RIGHT</string>
+    <string name="straight">STRAIGHT</string>
 </resources>

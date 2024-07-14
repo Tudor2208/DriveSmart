@@ -138,7 +138,12 @@
     <string name="restart_app">Repornește aplicația pentru a aplica schimbarea</string>
     <string name="english">Engleză</string>
     <string name="romanian">Română</string>
-    <string name="detect_traffic_signs">Detectare semne de circulație</string>
-    <string name="make_turn_prediction">Prezicere viraje</string>
+    <string name="detect_traffic_signs">Detecție semne de circulație</string>
+    <string name="make_turn_prediction">Predicție viraje</string>
     <string name="select_model">Selectează modul dorit</string>
+    <string name="speed_limit_30_sign">Limita de viteză 30 km/h</string>
+    <string name="speed_limit_30">Limita de viteză este de 30 de kilometri pe oră</string>
+    <string name="left">STANGA</string>
+    <string name="right">DREAPTA</string>
+    <string name="straight">DREPT</string>
 </resources>

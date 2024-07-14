@@ -77,12 +77,12 @@ public class MainActivity extends AppCompatActivity {
         new CountDownTimer(5000, 200) {
             int counter = 0;
             String displayedText = "";
-            final String SMART_DRIVE = "SmartDrive";
+            final String DRIVE_SMART = "DriveSmart";
 
             @Override
             public void onTick(long l) {
-                if (!displayedText.equals(SMART_DRIVE)) {
-                    displayedText += SMART_DRIVE.charAt(counter);
+                if (!displayedText.equals(DRIVE_SMART)) {
+                    displayedText += DRIVE_SMART.charAt(counter);
                     counter ++;
                     smartDriveTextView.setText(displayedText);
                 }
