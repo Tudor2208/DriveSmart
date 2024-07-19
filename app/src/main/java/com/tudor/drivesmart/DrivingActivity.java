@@ -33,6 +33,7 @@ import android.util.Log;
 import android.util.Pair;
 import android.view.Surface;
 import android.view.TextureView;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -122,6 +123,7 @@ public class DrivingActivity extends AppCompatActivity {
 
         finishTripButton.setOnClickListener(view -> showConfirmFinishJourneyDialog());
 
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setupTextureView();
     }
 

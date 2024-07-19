@@ -143,7 +143,7 @@
     <string name="select_model">Selectează modul dorit</string>
     <string name="speed_limit_30_sign">Limita de viteză 30 km/h</string>
     <string name="speed_limit_30">Limita de viteză este de 30 de kilometri pe oră</string>
-    <string name="left">STANGA</string>
-    <string name="right">DREAPTA</string>
-    <string name="straight">DREPT</string>
+    <string name="left">Curbă la stânga</string>
+    <string name="right">Curbă la dreapta</string>
+    <string name="straight">Drum drept</string>
 </resources>

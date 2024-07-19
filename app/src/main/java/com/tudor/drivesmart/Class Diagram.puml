@@ -1,0 +1,228 @@
+@startuml
+'https://plantuml.com/class-diagram
+skinparam defaultFontSize 18
+
+class DrivingActivity {
++ onRequestPermissionsResult(int, String[], int[]): void
++ onBackPressed(): void
+# onCreate(Bundle): void
+# onDestroy(): void
+- finishJourney(): void
+- getCurrentLocation(): CompletableFuture<Location>
+- showConfirmFinishJourneyDialog(): void
+- setupTextureView(): void
+- makeTurnPrediction(): void
+- detectTrafficSigns(): void
+- checkAndRequestPermissions(): void
+- openCamera(): void
+}
+
+DrivingActivity o-- Yolov5TFLiteDetector
+DrivingActivity o-- TrafficSignSoundManager
+DrivingActivity o-- TurnPredictionModel
+DrivingActivity .. MenuActivity
+
+Yolov5TFLiteDetector ..> Recognition
+DrivingActivity ..> Recognition
+
+class Yolov5TFLiteDetector {
+~ options: Interpreter.Options
+- {static} INPUT_SIZE: Size
+- OUTPUT_SIZE: int[]
+- {static} DETECT_THRESHOLD: float
+- MODEL_FILE: String
+- tflite: Interpreter
+- associatedAxisLabels: List<String>
+
+
++ initialModel(Context activity): void
++ detect(Bitmap bitmap): ArrayList<Recognition>
+# nms(ArrayList<Recognition>): ArrayList<Recognition>
+# nmsAllClass(ArrayList<Recognition>): ArrayList<Recognition>
+# boxIou(RectF a, RectF b): float
+# boxIntersection(RectF a, RectF b): float
+# boxUnion(RectF a, RectF b): float
+}
+
+class TrafficSignSoundManager {
+~  sharedPreferences: SharedPreferences
+-  tts: TextToSpeech
+-  ttsHandler: Handler
+-  queue: Queue<String>
+-  isSpeaking: boolean
+
++ announce(String): void
++ shutdown(): void
+- processNextAnno(): void
+}
+
+class TurnPredictionModel {
+- interpreter: Interpreter
+- outputShape: int[]
+- {static} modelFileName: String
+
++ predict(float[][][][]): Pair<String, Float>
+- loadModelFile(Context): MappedByteBuffer
+- argmax(float[]): int
+}
+
+class MenuActivity {
+~ auth: FirebaseAuth
+~ reference: DatabaseReference
+~ sharedPreferences: SharedPreferences
+~ editor: SharedPreferences.Editor
+
+# onCreate(Bundle): void
+- getModel(): CompletableFuture<String>
+- startDriving(): void
+- showStartDrivingDialog(): void
+- showLogoutDialog(): void
+}
+
+MenuActivity ..> MyJourneysActivity
+MenuActivity ..> SettingsActivity
+
+class EditProfile {
+~ sharedPreferences: SharedPreferences
+~ editor: SharedPreferences.Editor
+~ auth: FirebaseAuth
+~ user: FirebaseUser
+- adapter: ArrayAdapter<String>
+- {static}accountInfo: ArrayList<String>
+- {static}PASSWORD_PATTERN: String
+- {static}pattern: Pattern
+
+# onCreate(Bundle): void
+- showEditUsernameDialog(String): void
+- isValidUsername(String): boolean
+- editUsername(String): void
+- showEditEmailAddressDialog(): void
+- showChangePasswordDialog(): void
+- changePassword(String): void
+- getCurrentPassword(): CompletableFuture<String>
+- showWeakPasswordDialog(): void
+}
+
+class ForgotPasswordActivity{
+~ auth: FirebaseAuth
+
+# onCreate(Bundle savedInstanceState): void
+}
+
+
+class ImageUtils {
+- {static}WIDTH: int
+- {static}HEIGHT: int
+
++ {static} preprocessImage(Bitmap): float[][][][]
+}
+
+DrivingActivity ..> ImageUtils
+
+class JourneySummaryActivity {
+- infoList: ArrayList<String>
+- adapter: ArrayAdapter<String>
+
+# onCreate(Bundle): void
+- getLocalityFromLocation(double, double): String
+- getCountryFromLocation(double, double): String
+- showEditJourneyNameDialog(): void
+- handleUserInput(String): void
+- formatDuration(long): String
+}
+
+JourneySummaryActivity ..> MapsActivity
+
+
+class LoginActivity {
+~ sharedPreferences: SharedPreferences
+~ editor: SharedPreferences.Editor
+~ auth: FirebaseAuth
+
+# onCreate(Bundle): void
+- login(String, String, boolean): void
+}
+
+LoginActivity .. SignupActivity
+LoginActivity .. ForgotPasswordActivity
+LoginActivity ..> MenuActivity
+
+
+class MainActivity {
+~ carAnimation: Animation
+~ sharedPreferences: SharedPreferences
+
+# onCreate(Bundle): void
+- setLocale(Context, String): void
+}
+
+MainActivity ..> LoginActivity
+
+class MapsActivity {
+- mMap: GoogleMap
+- binding: ActivityMapsBinding
+
++ onMapReady(GoogleMap): void
+# onCreate(Bundle): void
+}
+
+class MyJourneysActivity {
+- journeyList: ArrayList<String>
+- adapter: ArrayAdapter<String>
+- snapshotList: ArrayList<DataSnapshot>
+
+# onCreate(Bundle): void
+- showDeleteJourneyDialog(DataSnapshot): void
+- deleteJourney(DataSnapshot): void
+- fetchJourneys(): void
+}
+
+MyJourneysActivity ..> JourneySummaryActivity
+
+class Recognition {
+- labelId: Integer
+- labelName: String
+- confidence: Float
+- location: RectF
+}
+
+class SettingsActivity {
+~ sharedPreferences: SharedPreferences
+~ editor: SharedPreferences.Editor
+
+# onCreate(Bundle): void
+- showChangeLanguageDialog(): void
+}
+
+SettingsActivity ..> EditProfile
+SettingsActivity ..> TrafficAlertsActivity
+
+
+class SignupActivity {
+~ auth: FirebaseAuth
+~ database: FirebaseDatabase
+~ reference: DatabaseReference
+- {static}PASSWORD_PATTERN: String
+- {static}pattern: Pattern
+
+# onCreate(Bundle): void
+- isValidUsername(String): boolean
+- showWeakPasswordDialog(): void
+- signup(String, String, String): void
+}
+
+
+class TrafficAlertsActivity {
+~ sharedPreferences: SharedPreferences
+~ editor: SharedPreferences.Editor
+- adapter: ArrayAdapter<String>
+- trafficSigns: ArrayList<String>
+- labels: List<String>
+
+#  onCreate(Bundle): void
+-  showChangeStatusDialog(int): void
+-  changeSignStatus(int, boolean): void
+-  getLabelsFromAssets(): List<String>
+}
+
+@enduml
