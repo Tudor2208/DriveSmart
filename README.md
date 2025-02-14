@@ -16,6 +16,7 @@ For implementing the traffic alert system, I used two types of deep learning mod
 ![Untitled7](https://github.com/user-attachments/assets/cdc755fd-9fd5-4b12-b654-6c97053dab61)
 ![Untitled8](https://github.com/user-attachments/assets/862133a8-ffc2-4ea6-86eb-1d5609828868)
 ![Untitled9](https://github.com/user-attachments/assets/f98e090f-a1c2-42d5-884d-9ba4c41eedc5)
+![Untitled10](https://github.com/user-attachments/assets/0d016001-f851-4625-83d4-42ab8ac7552f)
 
 
 
